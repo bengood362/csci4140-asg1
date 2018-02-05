@@ -5,6 +5,7 @@ import SocketServer
 import utils
 OPEN_SHIFT_IP_ADDR = "0.0.0.0"
 LOCALHOST_IP_ADDR = "0.0.0.0"
+PORT=8080
 
 class HTTPHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -27,11 +28,11 @@ def init_db():
     #          (date text, trans text, symbol text, qty real, price real)''')
 
 def main():
-    start_server(OPEN_SHIFT_IP_ADDR, 5003, HTTPHandler)
+    start_server(OPEN_SHIFT_IP_ADDR, PORT, HTTPHandler)
     pass
 
 def debug():
-    start_server(LOCALHOST_IP_ADDR, 5003, HTTPHandler)
+    start_server(LOCALHOST_IP_ADDR, PORT, HTTPHandler)
     pass
 
 if __name__ == "__main__":
