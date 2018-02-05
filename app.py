@@ -3,7 +3,7 @@ import sqlite3
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 import SocketServer
 import utils
-OPEN_SHIFT_IP_ADDR = "172.30.69.5"
+OPEN_SHIFT_IP_ADDR = "0.0.0.0"
 LOCALHOST_IP_ADDR = "0.0.0.0"
 
 class HTTPHandler(BaseHTTPRequestHandler):
