@@ -3,7 +3,7 @@ from datetime import datetime
 import sqlite3
 import os
 import inspect
-VERBOSE = True
+from utils import err, done
 
 DATABASE = 'csci4140.db'
 USER_TABLE = "user"
@@ -24,6 +24,8 @@ csci4140.db
 | image_url: TEXT
 | timestamp: TEXT
 """
+# NOTE: cookie should be expire whenever logout? not by any time
+
 # Singleton
 class DatabaseInstance(object):
     @staticmethod
@@ -44,7 +46,7 @@ class DatabaseInstance(object):
             )''')
             return conn, curs
         except Exception as error:
-            err(username+error)
+            err(username+str(error))
             return False
 
 DatabaseInstance.conn, DatabaseInstance.curs = DatabaseInstance.init_db()
@@ -85,7 +87,7 @@ def create_user(username, password):
             err(username+"user exists")
             return False
     except Exception as error:
-        err(username+error)
+        err(username+str(error))
         return False
 
 #NOTE: still thinking, not finished
@@ -109,7 +111,7 @@ def logout(username):
         done(username+":logout")
         return True
     except Exception as error:
-        err(username+error)
+        err(username+str(error))
         return False
 
 # TESTED!
@@ -124,7 +126,7 @@ def login_user(username, password):
             err(username+"wrong password")
             return False
     except Exception as error:
-        err(username+error)
+        err(username+str(error))
         return False
 
 # TESTED! check if old_pass correct --> update
@@ -141,7 +143,7 @@ def update_user(username, old_pass, password):
             conn.commit()
             done(username+":password changed")
     except Exception as error:
-        err(username+error)
+        err(username+str(error))
         return False
 
 # common method
@@ -215,18 +217,6 @@ def close_conn():
     except Exception as error:
         err(error)
         return False
-
-# TESTED!
-def err(s):
-    if VERBOSE:
-        caller = inspect.stack(0)[1][3]
-        print("Error@"+caller+': '+str(s))
-
-# TESTED!
-def done(s):
-    if VERBOSE:
-        caller = inspect.stack(0)[1][3]
-        print("done@"+caller+": "+str(s))
 
 if __name__ == "__main__":
     debug()
