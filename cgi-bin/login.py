@@ -11,14 +11,15 @@ def htmlTop():
              </head>
          <body>""")
 
-def failedHTMLMid():
+def htmlMid(message=''):
     print('''
     <form action="try_login.py" method="post" id="auth">
         username: <input type="text" name="username" required><br>
         password: <input type="password" name="password" required><br>
     </form>
-    <button type="submit" form="auth" value="Login">Login</button><br>
-    The password is wrong, please try again.''')    
+    <button type="submit" form="auth" value="Login">Login</button>''')
+    if message != '':
+        print "<br>"+message
 
 def firstHTMLMid():
     print('''
@@ -35,12 +36,14 @@ def htmlTail():
 if __name__ == '__main__':
     try:
         formData = cgi.FieldStorage()
-        auth = formData.getvalue('auth')
+        message = formData.getvalue('message','')
         htmlTop()
-        if auth == "failed":
-            failedHTMLMid()
+        if message == "wrong_password":
+            htmlMid("The password is wrong, please try again.")
+        elif message == "register_success":
+            htmlMid("Registration success, please login.")
         else:
-            firstHTMLMid()
+            htmlMid(message)
         htmlTail()
     except:
         cgi.print_exception()

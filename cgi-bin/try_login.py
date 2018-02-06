@@ -13,15 +13,13 @@ def htmlTop():
             </head>
         <body>""")
 
-def successLoginHTML():
-    print('''
-    redirecting...''')
-
-def unsuccessLoginHTML():
-    print('''
-    redirecting...
-    <meta http-equiv="refresh" content="0;url=login.py?auth=failed" />
-    ''')
+def loginHTML(success, message):
+    if success:
+        print('''
+        Login success! now NOT redirecting...''')
+    else:
+        print('''Login failed! now redirecting... <meta http-equiv="refresh" content="0;url=login.py?message={0}" />
+            '''.format(message))
 
 def htmlTail():
     print('''</body>
@@ -30,14 +28,12 @@ def htmlTail():
 if __name__ == '__main__':
     try:
         htmlTop()
+
         formData = cgi.FieldStorage()
         username = formData.getvalue('username')
         password = formData.getvalue('password')
-        success = db_util.login_user(username, password)
-        if success:
-            successLoginHTML()
-        else:
-            unsuccessLoginHTML()
+        success, message = db_util.login_user(username, password)
+        loginHTML(success, message)
         htmlTail()
     except:
         cgi.print_exception()

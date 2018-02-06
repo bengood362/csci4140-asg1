@@ -53,8 +53,9 @@ DatabaseInstance.conn, DatabaseInstance.curs = DatabaseInstance.init_db()
 
 # DEBUG
 def debug():
-    clean_db(USER_TABLE)
-    remove_db(USER_TABLE)
+    clean_table(USER_TABLE)
+    remove_table(USER_TABLE)
+    reset_conn()
     DatabaseInstance.conn, DatabaseInstance.curs = DatabaseInstance.init_db()
     create_user("bengood362","123456")
     create_user("benben123","123456")
@@ -82,13 +83,13 @@ def create_user(username, password):
             curs.execute("INSERT INTO user VALUES('{0}','{1}', NULL, NULL);".format(username, password))
             conn.commit()
             done(username+"create user success")
-            return True
+            return (True, "register_success")
         else:
             err(username+"user exists")
-            return False
+            return (False, "user_exists")
     except Exception as error:
         err(username+str(error))
-        return False
+        return (False, str(error))
 
 #NOTE: still thinking, not finished
 def resume_session(cookie):
@@ -109,10 +110,10 @@ def logout(username):
         curs.execute("UPDATE user SET cookie_expire='{0}' and cookie=NULL WHERE username='{1}'".format(now, username))
         conn.commit()
         done(username+":logout")
-        return True
+        return (True,'')
     except Exception as error:
         err(username+str(error))
-        return False
+        return (False, str(error))
 
 # TESTED!
 def login_user(username, password):
@@ -121,13 +122,13 @@ def login_user(username, password):
         success = len(curs.execute("SELECT * from user WHERE username='{0}' AND password='{1}';".format(username, password)).fetchall()) >= 1
         if success:
             done(username+":login success")
-            return True
+            return (True,'')
         else:
             err(username+"wrong password")
-            return False
+            return (False,"wrong_password")
     except Exception as error:
         err(username+str(error))
-        return False
+        return (False,str(error))
 
 # TESTED! check if old_pass correct --> update
 def update_user(username, old_pass, password):
@@ -137,14 +138,15 @@ def update_user(username, old_pass, password):
         saved_pass = curs.execute("SELECT password FROM user WHERE username='{0}'".format(username)).fetchone()[0]
         if saved_pass != old_pass:
             err(username+":old password is incorrect")
-            return False
+            return (False,"old_not_match")
         else:
             curs.execute("UPDATE user SET password='{0}' WHERE username='{1}'".format(password, username))
             conn.commit()
             done(username+":password changed")
+            return (True,'')
     except Exception as error:
         err(username+str(error))
-        return False
+        return (False,str(error))
 
 # common method
 # TESTED!
@@ -178,17 +180,19 @@ def table_len(tablename):
         return False
 
 # TESTED!
-def clean_db(tablename):
+def clean_table(tablename):
     try:
+        conn = DatabaseInstance.conn
         curs = DatabaseInstance.curs
         curs.execute("DELETE FROM {0};".format(tablename))
+        conn.commit()
         return True
     except Exception as error:
         err(error)
         return False
 
 # TESTED!
-def remove_db(tablename):
+def remove_table(tablename):
     try:
         curs = DatabaseInstance.curs
         curs.execute("DROP TABLE {0};".format(tablename))
@@ -219,4 +223,4 @@ def close_conn():
         return False
 
 if __name__ == "__main__":
-    debug()
+    pass
