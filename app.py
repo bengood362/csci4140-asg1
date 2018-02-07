@@ -3,8 +3,6 @@ import sqlite3
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from CGIHTTPServer import CGIHTTPRequestHandler
 import SocketServer
-import utils
-import db_util
 import os
 OPEN_SHIFT_IP_ADDR = "0.0.0.0"
 LOCALHOST_IP_ADDR = "0.0.0.0"
