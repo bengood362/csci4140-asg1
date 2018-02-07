@@ -2,8 +2,11 @@
 # try_register.cgi
 import cgi
 import db_util
-def htmlTop():
-    print("""Content-type:text/html\n\n
+def htmlTop(cookie=''):
+    print("Content-type:text/html")
+    if cookie != '':
+        print("Set-Cookie: cookie=\"{0}\"".format(cookie))
+    print("""
         <!DOCTYPE html>
         <html lang='en'>
              <head>
@@ -15,10 +18,10 @@ def htmlTop():
 def registerHTML(success, message):
     if success:
         print('''Success! now redirecting...
-            <meta http-equiv="refresh" content="0;url=login.py?message={0}"/>'''.format(message))
+            <meta http-equiv="refresh" content="0;url=login.py?message={0}"/>'''.format(cgi.escape(message)))
     else:
         print('''Failed...now redirecting...
-            <meta http-equiv="refresh" content="0;url=register.py?message={0}"/>'''.format(message))
+            <meta http-equiv="refresh" content="0;url=register.py?message={0}"/>'''.format(cgi.escape(message)))
 
 def htmlMiddle():
     print('''
@@ -36,16 +39,24 @@ def htmlTail():
 
 if __name__ == '__main__':
     try:
-        htmlTop()
         formData = cgi.FieldStorage()
         username = formData.getvalue('username')
         password = formData.getvalue('password')
         password_check = formData.getvalue('password_check')
+
         if password != password_check:
+            htmlTop()
             registerHTML(False, "password_not_match")
+            htmlTail()
         else:
-            success,message=db_util.create_user(username, password)
-            registerHTML(success, message)
-        htmlTail()
+            create_success,message=db_util.create_user(username, password)
+            if create_success:
+                cookie_success, cookie = db_util.get_cookie(username)
+            else:
+                cookie = ''
+            htmlTop(cookie)
+            registerHTML(create_success, message)
+            htmlTail()
+
     except:
         cgi.print_exception()

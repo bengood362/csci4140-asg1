@@ -1,12 +1,9 @@
 #!/usr/bin/python
-# try_login.cgi
+# try_logout.cgi
 import cgi
 import db_util
 
-def htmlTop(cookie):
-    print("Content-type:text/html")
-    if cookie != '':
-        print("Set-Cookie: cookie=\"{0}\"".format(cookie))
+def htmlTop():
     print("""Content-type:text/html\n\n
         <!DOCTYPE html>
         <html lang='en'>
@@ -16,10 +13,10 @@ def htmlTop(cookie):
             </head>
         <body>""")
 
-def loginHTML(success, message, username):
+def logoutHTML(success, message):
     if success:
         print('''
-        Login success! now redirecting...<meta http-equiv="refresh" content="0;url=login_index.py?username={0}" />'''.format(username))
+        Logout success! now redirecting...<meta http-equiv="refresh" content="0;url=../index.html" />''')
     else:
         print('''Login failed! now redirecting... <meta http-equiv="refresh" content="0;url=login.py?message={0}" />
             '''.format(cgi.escape(message)))
@@ -30,16 +27,13 @@ def htmlTail():
 
 if __name__ == '__main__':
     try:
+        htmlTop()
+
         formData = cgi.FieldStorage()
         username = formData.getvalue('username')
         password = formData.getvalue('password')
-        login_succ, message = db_util.login_user(username, password)
-        if login_succ:
-            cookie_succ,cookie=db_util.get_cookie(username)
-        else:
-            cookie=''
-        htmlTop(cookie)
-        loginHTML(login_succ, message, username)
+        success, message = db_util.logout(username)
+        loginHTML(success, message)
         htmlTail()
     except:
         cgi.print_exception()

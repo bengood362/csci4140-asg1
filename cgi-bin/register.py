@@ -20,7 +20,7 @@ def htmlMid(message=''):
     </form>
     <button type="submit" form="register" value="Register">Register</button>''')
     if message != '':
-        print ("<br>"+message)
+        print ("<br>"+cgi.escape(message))
 
 def htmlTail():
     print('''</body>
