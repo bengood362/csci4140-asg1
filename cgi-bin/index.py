@@ -33,7 +33,11 @@ def get_cookie():
         cookies = os.environ['HTTP_COOKIE']
         cookies = cookies.split('; ')
         for cookie in cookies:
-            cookie_key, cookie_val = cookie.split('=')
+            try:
+                cookie_key, cookie_val = cookie.split('=')
+            except:
+                cookie_key = ""
+                cookie_val = ""
             print cookie_val
             if cookie_key == "cookie":
                 auth_cookie = cookie_val
