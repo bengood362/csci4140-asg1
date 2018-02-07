@@ -13,14 +13,15 @@ def htmlTop():
 
 def auth_info(username):
     print('''username: {0}<br>
-    <form action="try_logout.py" method="post" id="auth">
-        <input type="hidden" name="username" value="{1}" />
+    <form action="try_logout.py" method="post" id="logout">
+        <input type="hidden" name="username" value="{0}" />
         <input type="submit" value="logout" method="post"/>
     </form>
-    <form action="try_change_password.py" method="post" id="auth">
+    <form action="change_password.py" method="post" id="change">
+        <input type="hidden" name="username" value="{0}" />
         <input type="submit" value="change_password" method="post"/>
     </form>
-    '''.format(cgi.escape(username), cgi.escape(username)))
+    '''.format(cgi.escape(username)))
 
 def instagram_feed(limit=10):
     for i in range(limit):

@@ -6,7 +6,7 @@ import inspect
 import uuid #uuid4() --> cookie
 from utils import err, done,log
 try:
-    log(os.environ['GATEWAY_INTERFACE'])
+    # log(os.environ['GATEWAY_INTERFACE'])
     if 'cgi' in os.environ['GATEWAY_INTERFACE'].lower():
         DATABASE = 'csci4140.db'
     else:
@@ -187,12 +187,12 @@ def update_user(username, old_pass, password):
         saved_pass = curs.execute("SELECT password FROM user WHERE username='{0}'".format(username)).fetchone()[0]
         if saved_pass != old_pass:
             err(username+":old password is incorrect")
-            return (False,"old_not_match")
+            return (False,"old password does not match")
         else:
             curs.execute("UPDATE user SET password='{0}' WHERE username='{1}';".format(password, username))
             conn.commit()
             done(username+":password changed")
-            return (True,'')
+            return (True,'password has changed, please login again')
     except Exception as error:
         err(username+str(error))
         return (False,str(error))

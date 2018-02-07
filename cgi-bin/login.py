@@ -12,14 +12,14 @@ def htmlTop():
          <body>""")
 
 def htmlMid(message=''):
-    print('''
+    print('''<h1>Login</h1>
     <form action="try_login.py" method="post" id="auth">
         username: <input type="text" name="username" required><br>
-        password: <input type="password" name="password" required><br>
+        password: <input type="password" name="password" required><br><br>
     </form>
     <button type="submit" form="auth" value="Login">Login</button>
     <form action="register.py" method="get">
-        <input type="submit" value="Register" method="post"/>
+        <input type="submit" value="Not registered? register today!" method="post"/>
     </form>''')
     if message != '':
         print "<br>"+cgi.escape(message)

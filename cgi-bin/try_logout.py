@@ -33,7 +33,7 @@ if __name__ == '__main__':
         username = formData.getvalue('username')
         password = formData.getvalue('password')
         success, message = db_util.logout(username)
-        loginHTML(success, message)
+        logoutHTML(success, message)
         htmlTail()
     except:
         cgi.print_exception()

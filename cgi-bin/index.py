@@ -10,7 +10,7 @@ def htmlTop():
                      <meta charset='utf-8'/>
                      <title>Web Instagram</title>
                  </head>
-                 <body>""")
+                 <body><h1>Start!</h1>""")
 
 def loginMid(username):
     print('''Logging in with cookie! now redirecting... <meta http-equiv="refresh" content="0;url=login_index.py?username={0}" />
