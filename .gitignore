@@ -3,3 +3,5 @@ tools
 *.pyc
 *~
 *.db
+*.db-journal
+log.txt
