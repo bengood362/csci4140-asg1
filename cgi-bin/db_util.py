@@ -186,10 +186,10 @@ def clean_table(tablename):
         curs = DatabaseInstance.curs
         curs.execute("DELETE FROM {0};".format(tablename))
         conn.commit()
-        return True
+        return (True,'clean successfully')
     except Exception as error:
         err(error)
-        return False
+        return (False,str(error))
 
 # TESTED!
 def remove_table(tablename):

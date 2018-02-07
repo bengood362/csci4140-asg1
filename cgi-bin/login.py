@@ -39,7 +39,7 @@ if __name__ == '__main__':
         message = formData.getvalue('message','')
         htmlTop()
         if message == "wrong_password":
-            htmlMid("The password is wrong, please try again.")
+            htmlMid("No such account or the password is wrong, please try again.")
         elif message == "register_success":
             htmlMid("Registration success, please login.")
         else:
