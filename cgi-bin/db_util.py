@@ -210,7 +210,7 @@ def entry_exist(tablename, column_key, column_val):
         curs = DatabaseInstance.curs
         stmt = "SELECT EXISTS(SELECT * FROM {0} WHERE {1}='{2}')".format(tablename, column_key, column_val)
         res = curs.execute(stmt).fetchone()[0]
-        done("entry_exist checked with {0},{1},{2},output {3}".format(tablename, column_key, column_val, res!=0))
+        # done("entry_exist checked with {0},{1},{2},output {3}".format(tablename, column_key, column_val, res!=0))
         return res != 0
     except Exception as error:
         err(error)
