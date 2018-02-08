@@ -14,7 +14,7 @@ def htmlTop():
             </head>
         <body>""")
 
-def auth_info(username):
+def auth_info(username, message=''):
     print('''username: {0}<br>
     <form action="try_logout.py" method="post" id="logout">
         <input type="hidden" name="username" value="{0}" />
@@ -25,12 +25,17 @@ def auth_info(username):
         <input type="submit" value="change_password" method="post"/>
     </form>
     '''.format(cgi.escape(username)))
+    if message != '':
+        print("<br>{0}<br>".format(message))
 
-def upload_image():
-    print('''<form action="upload_image.py" method="post">
-    <input type="file" name="image"/>
+def upload_image(username):
+    print('''
+    <form action="upload_image.py" method="post">
+        <input type="hidden" name="username" value="{0}" />
+        <input type="file" name="image"/>
+        <input type="submit" value="Upload" method="post"/>
     </form>
-    ''')
+    '''.format(username))
 
 def instagram_feed(limit=10):
     for i in range(limit):
@@ -50,9 +55,9 @@ if __name__ == '__main__':
 
         htmlTop()
 
-        auth_info(username)
+        auth_info(username,message)
         print "<hr>"
-
+        # upload_image(username)
         print "<hr>"
         instagram_feed(5)
 

@@ -3,8 +3,13 @@
 import cgi
 import db_util
 
-def htmlTop():
-    print("Content-type:text/html\n")
+def htmlTop(cookie='', username=''):
+    print("Content-type:text/html")
+    if cookie != '':
+        print("Set-Cookie: cookie={0}".format(cookie))
+    if username != '':
+        print("Set-Cookie: username={0}".format(username))
+    print("\n")
     print("""
         <!DOCTYPE html>
         <html lang='en'>
@@ -17,20 +22,10 @@ def htmlTop():
 def registerHTML(success, message):
     if success:
         print('''Success! now redirecting...
-            <meta http-equiv="refresh" content="0;url=login.py?message={0}"/>'''.format(cgi.escape(message)))
+            <meta http-equiv="refresh" content="0;url=login_index.py?message={0}"/>'''.format(cgi.escape(message)))
     else:
         print('''Failed...now redirecting...
             <meta http-equiv="refresh" content="0;url=register.py?message={0}"/>'''.format(cgi.escape(message)))
-
-def htmlMiddle():
-    print('''
-    <form action="try_register.py" method="post" id="register">
-        username: <input type="text" name="username" required><br>
-        password: <input type="password" name="password" required><br>
-        password: <input type="password" name="retype password" required><br>
-    </form>
-
-    <button type="submit" form="register" value="Login">Login</button>''')
 
 def htmlTail():
     print('''</body>
@@ -49,9 +44,15 @@ if __name__ == '__main__':
             htmlTail()
         else:
             create_success,message=db_util.create_user(username, password)
-            htmlTop()
-            registerHTML(create_success, message)
-            htmlTail()
+            if create_success:
+                login_success, message=db_util.login_user(username, password)
+                cookie_success, cookie=db_util.get_cookie(username)
+                htmlTop(cookie, username)
+                registerHTML(True, "register and login success")
+            else:
+                htmlTop()
+                registerHTML(False, message)
+                htmlTail()
 
     except:
         cgi.print_exception()
