@@ -21,7 +21,7 @@ def redirectMid(success, message, username):
             <meta http-equiv="refresh" content="0;url=login.py?message={0}"/>'''.format(cgi.escape(message)))
     else:
         print('''Failed...now redirecting...
-            <meta http-equiv="refresh" content="0;url=change_password.py?message={0}&username={1}"/>'''.format(cgi.escape(message),cgi.escape(username)))
+            <meta http-equiv="refresh" content="0;url=change_password.py?message={0}"/>'''.format(cgi.escape(message),cgi.escape(username)))
 
 
 def htmlTail():

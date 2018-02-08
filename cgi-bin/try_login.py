@@ -3,6 +3,7 @@
 import cgi
 import db_util
 import utils
+import os
 
 def htmlTop(cookie, username):
     if cookie != '':

@@ -2,6 +2,8 @@
 # try_register.cgi
 import cgi
 import db_util
+import os
+import utils
 
 def htmlTop(cookie='', username=''):
     print("Content-type:text/html")

@@ -3,7 +3,8 @@ import inspect
 import sys
 import os
 from datetime import datetime
-VERBOSE = False
+VERBOSE = True
+LOGGING = True
 LOGFILE = 'log.txt'
 # TESTED!
 def get_client_cookie():
@@ -22,7 +23,7 @@ def get_client_cookie():
                 cookie_val = ""
     # log("Cookie evaluated: "+str(res))
     return res
-
+# TESTED!
 def err(s):
     if VERBOSE:
         caller = inspect.stack(0)[1][3]
@@ -39,8 +40,13 @@ def done(s):
         log("done@"+caller+": "+str(s))
 
 def log(s):
-    if VERBOSE:
-        with open(LOGFILE,'a+') as f:
+    try:
+        if LOGGING or VERBOSE: # incase someone call it directly
+            f = open(LOGFILE,'a+')
             time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             f.write(time+':\t'+str(s))
             f.write('\n')
+            f.close()
+    except:
+        pass
+        # probably broken pipe, etc
