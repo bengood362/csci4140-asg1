@@ -3,8 +3,16 @@ import inspect
 import sys
 import os
 from datetime import datetime
-VERBOSE = False
-LOGGING = False
+def set_broken_pipe_off():
+    try:
+        from signal import signal, SIGPIPE, SIG_DFL
+        signal(SIGPIPE,SIG_DFL)
+    except Exception as error:
+        print error
+set_broken_pipe_off()
+
+VERBOSE = True
+LOGGING = True
 LOGFILE = 'log.txt'
 # TESTED!
 def get_client_cookie():
@@ -41,8 +49,8 @@ def done(s):
 
 def log(s):
     try:
-        if LOGGING or VERBOSE: # incase someone call it directly
-            f = open(LOGFILE,'a+')
+        if LOGGING and VERBOSE: # incase someone call it directly
+            f = open(LOGFILE,'a')
             time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             f.write(time+':\t'+str(s))
             f.write('\n')
