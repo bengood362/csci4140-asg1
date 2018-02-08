@@ -4,8 +4,6 @@ import cgi
 import db_util
 def htmlTop():
     print("Content-type:text/html")
-    print("Set-Cookie: cookie=None")
-    print("Set-Cookie: username=None\n\n")
     print("""
         <!DOCTYPE html>
         <html lang='en'>

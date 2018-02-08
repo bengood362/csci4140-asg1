@@ -21,12 +21,15 @@ def discardHTMLMid(file_path):
     print("""You have chosen to discard, now redirecting...<meta http-equiv="refresh" content="0;url=login_index.py" />""")
 
 def unlink_file(file_path):
-    if os.path.isfile(file_path):
-        os.unlink(file_path)
-        utils.done("done unlinking file because discard")
-    else:
-        utils.log(file_path)
-        utils.log(os.getcwd())
+    try:
+        if os.path.isfile(file_path):
+            os.unlink(file_path)
+            utils.done("done unlinking file because discard")
+        else:
+            utils.log(file_path)
+            utils.log(os.getcwd())
+    except Exception as error:
+        db_util.err(error)
 
 def htmlTail():
     print('''</body>
