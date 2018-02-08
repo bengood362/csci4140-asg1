@@ -10,7 +10,7 @@ def htmlTop():
         <html lang='en'>
             <head>
                 <meta charset='utf-8'/>
-                <title>Login</title>
+                <title>Web Instagram</title>
             </head>
         <body>""")
 
@@ -30,10 +30,10 @@ def auth_info(username, message=''):
 
 def upload_image(username):
     print('''
-    <form action="upload_image.py" method="post">
+    <form action="upload_image.py" method="POST" enctype="multipart/form-data" id="img_upload">
         <input type="hidden" name="username" value="{0}" />
-        <input type="file" name="image"/>
-        <input type="submit" value="Upload" method="post"/>
+        <input type="file" name="image" id="image" accept="image/jpeg,image/jpg,image/gif,image/png" required/>
+        <input type="submit" name="submit" value="Upload" method="post" form="img_upload"/>
     </form>
     '''.format(username))
 
@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
         auth_info(username,message)
         print "<hr>"
-        # upload_image(username)
+        upload_image(username)
         print "<hr>"
         instagram_feed(5)
 

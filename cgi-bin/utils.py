@@ -10,7 +10,7 @@ def get_client_cookie():
     res=dict()
     if 'HTTP_COOKIE' in os.environ:
         cookies = os.environ['HTTP_COOKIE']
-        log("Real cookie: {0}".format(cookies))
+        # log("Real cookie: {0}".format(cookies))
         cookies = cookies.split('; ')
         for cookie in cookies:
             try:
@@ -20,7 +20,7 @@ def get_client_cookie():
                 log("Cookie error:"+cookie)
                 cookie_key = ""
                 cookie_val = ""
-    log("Cookie evaluated: "+str(res))
+    # log("Cookie evaluated: "+str(res))
     return res
 
 def err(s):
@@ -28,7 +28,6 @@ def err(s):
         caller = inspect.stack(0)[1][3]
         print("Error@"+caller+': '+str(s))
         print("<br>")
-        time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         log("Error@"+caller+': '+str(s))
 
 # TESTED!
@@ -37,7 +36,6 @@ def done(s):
         caller = inspect.stack(0)[1][3]
         print("done@"+caller+": "+str(s))
         print("<br>")
-
         log("done@"+caller+": "+str(s))
 
 def log(s):

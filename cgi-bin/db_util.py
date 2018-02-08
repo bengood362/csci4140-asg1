@@ -28,6 +28,7 @@ csci4140.db
 | cookie: TEXT
 @@@ image_link @@@
 | owner: TEXT
+| private: INTEGER (1/ 0)
 | image_url: TEXT
 | timestamp: TEXT
 """
