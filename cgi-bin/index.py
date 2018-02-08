@@ -38,7 +38,6 @@ if __name__ == '__main__':
         if cookies.get('cookie'):
             auth_cookie = cookies['cookie']
             auth_success, message=db_util.get_username(auth_cookie)
-            print(message)
             if auth_success:
                 username=message
                 loginMid(username)

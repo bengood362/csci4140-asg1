@@ -55,6 +55,5 @@ if __name__ == '__main__':
                 htmlTop()
                 registerHTML(False, message)
                 htmlTail()
-
     except:
         cgi.print_exception()

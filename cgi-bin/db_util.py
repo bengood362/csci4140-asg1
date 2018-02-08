@@ -114,6 +114,7 @@ def get_username(cookie):
                 done("Username is retrieved by this cookie {0}".format(cookie))
                 return (True,username)
         else:
+            err("Cannot find any user with such cookie")
             return (False,'Cannot find any user with such cookie')
     except Exception as error:
         err(error)

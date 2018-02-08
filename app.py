@@ -26,8 +26,16 @@ def main():
     pass
 
 def debug():
+    with open('a.txt',"a+") as f:
+        f.write("hihi\n")
+    with open('a.txt',"a+") as f:
+        f.write("byebye\n")
+    with open('a.txt',"a+") as f:
+        f.write("hihi\n")
+    with open('a.txt',"a+") as f:
+        f.write("byebye\n")
     start_server(LOCALHOST_IP_ADDR, PORT, CGIWithMessageRH)
     pass
 
 if __name__ == "__main__":
-    main()
+    debug()
