@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import db_util
+import utils
 import os
 import cgi
 def htmlTop():
@@ -28,26 +29,12 @@ def htmlTail():
     print("""</body>
             </html>""")
 
-def get_cookie():
-    if 'HTTP_COOKIE' in os.environ:
-        cookies = os.environ['HTTP_COOKIE']
-        cookies = cookies.split('; ')
-        for cookie in cookies:
-            try:
-                cookie_key, cookie_val = cookie.split('=')
-            except:
-                cookie_key = ""
-                cookie_val = ""
-            print cookie_val
-            if cookie_key == "cookie":
-                auth_cookie = cookie_val
-                return auth_cookie[1:-1]
-
 if __name__ == '__main__':
     try:
         htmlTop()
-        auth_cookie = get_cookie()
-        if auth_cookie:
+        cookies = utils.get_client_cookie()
+        if cookies['cookie']:
+            auth_cookie = cookies['cookie']
             auth_success, message=db_util.get_username(auth_cookie)
             print(message)
             if auth_success:

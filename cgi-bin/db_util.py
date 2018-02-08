@@ -97,7 +97,7 @@ def create_user(username, password):
         err(username+str(error))
         return (False, str(error))
 
-# BUG!
+# NOTE: useless?
 def get_username(cookie):
     try:
         curs = DatabaseInstance.curs
@@ -115,7 +115,7 @@ def get_username(cookie):
         err(error)
         return (False,error)
 
-# BUG
+#For find matching cookie with username
 def get_cookie(username):
     try:
         curs = DatabaseInstance.curs
@@ -124,11 +124,11 @@ def get_cookie(username):
             cookies = cookies[0][0]
             if cookies == None:
                 err("Cannot find cookie with such user name, please login")
-                return (False,'Cannot find cookie with such user name, please login')
+                return (False,"Cannot find cookie with such user name, please login")
             else:
                 return (True,cookies)
         else:
-            return (False,'Cannot find any user with such user name')
+            return (False,"Cannot find any user with such user name")
     except Exception as error:
         err(error)
         return (False,error)

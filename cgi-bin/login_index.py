@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # login_index.cgi
 import cgi
+import utils
+import os
+import db_util
 def htmlTop():
     print("""Content-type:text/html\n\n
         <!DOCTYPE html>
@@ -23,6 +26,12 @@ def auth_info(username):
     </form>
     '''.format(cgi.escape(username)))
 
+def upload_image():
+    print('''<form action="upload_image.py" method="post">
+    <input type="file" name="image"/>
+    </form>
+    ''')
+
 def instagram_feed(limit=10):
     for i in range(limit):
         print('''instagram_feed''')
@@ -35,12 +44,15 @@ def htmlTail():
 if __name__ == '__main__':
     try:
         formData = cgi.FieldStorage()
-        username = formData.getvalue('username', 'ERROR')
+        cookies = utils.get_client_cookie()
+        username = cookies.get('username',"ERROR")
         message = formData.getvalue('message', '')
 
         htmlTop()
 
         auth_info(username)
+        print "<hr>"
+
         print "<hr>"
         instagram_feed(5)
 

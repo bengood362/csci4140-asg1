@@ -2,16 +2,15 @@
 # try_register.cgi
 import cgi
 import db_util
-def htmlTop(cookie=''):
-    print("Content-type:text/html")
-    if cookie != '':
-        print("Set-Cookie: cookie=\"{0}\"".format(cookie))
+
+def htmlTop():
+    print("Content-type:text/html\n")
     print("""
         <!DOCTYPE html>
         <html lang='en'>
              <head>
                  <meta charset='utf-8'/>
-                 <title>Login</title>
+                 <title>Register</title>
              </head>
          <body>""")
 
@@ -50,11 +49,7 @@ if __name__ == '__main__':
             htmlTail()
         else:
             create_success,message=db_util.create_user(username, password)
-            if create_success:
-                cookie_success, cookie = db_util.get_cookie(username)
-            else:
-                cookie = ''
-            htmlTop(cookie)
+            htmlTop()
             registerHTML(create_success, message)
             htmlTail()
 
