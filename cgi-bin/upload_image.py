@@ -34,17 +34,19 @@ def htmlTail():
     print("""</body>
             </html>""")
 
-def successHtmlMid(message=''):
-    print("""<h1>Successfully uploaded image, you can edit it now</h1>
+def startEditHtmlMid(file_path=''):
+    print("""<h1>Edit</h1>
         """)
-    if message!='':
-        print(message)
+
 
 def unsuccessHtmlMid(message=''):
     print("""<h1>Upload image failed, please try again</h1>
         """)
     if message!='':
         print(message)
+    print '''<form action="login_index.py">
+                <input type="submit" value="back"/>
+            </form>'''
 
 def save_image(image_from_form, username):
     try:
@@ -95,12 +97,13 @@ if __name__ == '__main__':
         htmlTop()
         cookies = utils.get_client_cookie()
         formData = cgi.FieldStorage()
-        username = formData.getvalue('username',"ERROR")
+        username = formData.getvalue("username","ERROR")
+        visiblity = formData.getvalue("visiblity", "public")
         image = formData['image']
         success, message = save_image(image, username)
         if success:
             utils.done(username+"image saved and validated")
-            successHtmlMid(message)
+            startEditHtmlMid(message)
         else:
             unsuccessHtmlMid(message)
         htmlTail()

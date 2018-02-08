@@ -13,7 +13,7 @@ def htmlTop():
                      <title>Web Instagram</title>
                  </head>
                  <body>""")
-    print("<h1>Start!</h1>")
+    print("<h1>Start! Login or register web instagram today!</h1>")
 
 def loginMid(username):
     print('''Logging in with cookie! now redirecting... <meta http-equiv="refresh" content="0;url=login_index.py?username={0}" />
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     try:
         htmlTop()
         cookies = utils.get_client_cookie()
-        if cookies['cookie']:
+        if cookies.get('cookie'):
             auth_cookie = cookies['cookie']
             auth_success, message=db_util.get_username(auth_cookie)
             print(message)

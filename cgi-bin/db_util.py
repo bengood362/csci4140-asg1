@@ -30,7 +30,7 @@ csci4140.db
 | owner: TEXT
 | private: INTEGER (1/ 0)
 | image_url: TEXT
-| timestamp: TEXT
+| timestamp: DATETIME
 """
 
 # Singleton
@@ -101,7 +101,6 @@ def create_user(username, password):
         err(username+str(error))
         return (False, str(error))
 
-# NOTE: useless?
 def get_username(cookie):
     try:
         curs = DatabaseInstance.curs
@@ -261,6 +260,7 @@ def reset_conn():
     try:
         close_conn()
         DatabaseInstance.conn, DatabaseInstance.curs = DatabaseInstance.init_db(DATABASE)
+        return True
     except Exception as error:
         err(error)
         return False

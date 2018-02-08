@@ -5,3 +5,7 @@ tools
 *.db
 *.db-journal
 log.txt
+*.png
+*.jpg
+*.jpeg
+*.gif

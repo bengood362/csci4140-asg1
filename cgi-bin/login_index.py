@@ -12,10 +12,10 @@ def htmlTop():
                 <meta charset='utf-8'/>
                 <title>Web Instagram</title>
             </head>
-        <body>""")
+        <body><h1>Web instagram</h1>""")
 
 def auth_info(username, message=''):
-    print('''username: {0}<br>
+    print('''<h2>Hello {0}!</h2>
     <form action="try_logout.py" method="post" id="logout">
         <input type="hidden" name="username" value="{0}" />
         <input type="submit" value="logout" method="post"/>
@@ -33,6 +33,12 @@ def upload_image(username):
     <form action="upload_image.py" method="POST" enctype="multipart/form-data" id="img_upload">
         <input type="hidden" name="username" value="{0}" />
         <input type="file" name="image" id="image" accept="image/jpeg,image/jpg,image/gif,image/png" required/>
+        <br>
+        visiblity: <select name="visiblity">
+          <option value="public">public</option>
+          <option value="private">private</option>
+        </select>
+        <br><br>
         <input type="submit" name="submit" value="Upload" method="post" form="img_upload"/>
     </form>
     '''.format(username))
@@ -50,7 +56,9 @@ if __name__ == '__main__':
     try:
         formData = cgi.FieldStorage()
         cookies = utils.get_client_cookie()
-        username = cookies.get('username',"ERROR")
+        # username = cookies.get('username',"ERROR")
+        auth_cookie = cookies.get('cookie',"ERROR")
+        get_username_success, username = db_util.get_username(auth_cookie)
         message = formData.getvalue('message', '')
 
         htmlTop()
