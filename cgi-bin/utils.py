@@ -3,8 +3,8 @@ import inspect
 import sys
 import os
 from datetime import datetime
-VERBOSE = True
-LOGGING = True
+VERBOSE = False
+LOGGING = False
 LOGFILE = 'log.txt'
 # TESTED!
 def get_client_cookie():
