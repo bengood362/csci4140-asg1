@@ -47,6 +47,7 @@ class DatabaseInstance(object):
             )''')
             curs.execute('''CREATE TABLE IF NOT EXISTS image_link (
                 owner TEXT,
+                private INTEGER,
                 image_url TEXT,
                 Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
             )''')
@@ -62,6 +63,8 @@ DatabaseInstance.conn, DatabaseInstance.curs = DatabaseInstance.init_db(DATABASE
 def debug():
     clean_table(USER_TABLE)
     remove_table(USER_TABLE)
+    clean_table(IMAGE_TABLE)
+    remove_table(IMAGE_TABLE)
     reset_conn()
     DatabaseInstance.conn, DatabaseInstance.curs = DatabaseInstance.init_db(DATABASE)
     create_user("bengood362","123456")
@@ -248,10 +251,10 @@ def remove_table(tablename):
         curs = DatabaseInstance.curs
         curs.execute("DROP TABLE {0};".format(tablename))
         conn.commit()
-        return True
+        return (True,"Success")
     except Exception as error:
         err(error)
-        return False
+        return (False,str(error))
 
 # TESTED!
 def reset_conn():

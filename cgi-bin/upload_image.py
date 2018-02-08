@@ -46,7 +46,7 @@ def unsuccessHtmlMid(message=''):
     if message!='':
         print(message)
 
-def save_image(image_from_form):
+def save_image(image_from_form, username):
     try:
         if image.file:
             # initialize
@@ -58,7 +58,6 @@ def save_image(image_from_form):
             full_filename = filename+'.'+file_extension
             path = os.path.join(UPLOAD_PATH, full_filename)
             with open(path, 'wb') as f:
-                # NOTE: resize image when necessary here
                 f.write(image_from_form.file.read())
             # identify if the image is valid
             # Identify output format: ['./upload/yr3sem2cusis_b7bc47388f6134a559a69a03.png', 'PNG', '1852x1092', '1852x1092+0+0', '8-bit', 'sRGB', '360167B', '0.000u', '0:00.000\n']
@@ -70,11 +69,11 @@ def save_image(image_from_form):
                 image_size = image_iden[2]
                 shown_ext = full_filename.split('.')[-1]
                 if image_ext.upper() != shown_ext.upper():
-                    utils.err("{0}: image extension does not match: shown {2}, but actually {1}".format(full_filename, image_ext, shown_ext))
+                    utils.err("{0} {4}: image extension does not match: shown {2}, but actually {1}".format(username, image_ext, shown_ext, full_filename))
                     return (False, "image extension does not match")
             elif err:
                 return (False, "target is not a image")
-                utils.err(err)
+                utils.err(username+err)
             return (True,path)
         else:
             utils.log("{0}: Tries to upload an image but failed!".format(username))
@@ -85,9 +84,10 @@ def save_image(image_from_form):
             utils.log("type:"+str(image.type))
             utils.log("disposition:"+str(image.disposition))
             utils.log("list:"+str(image.list))
+            utils.err(username+err)
             return (False, "cannot open image")
     except Exception as error:
-        utils.err(error)
+        utils.err(username+error)
         return (False,str(error))
 
 if __name__ == '__main__':
@@ -97,8 +97,9 @@ if __name__ == '__main__':
         formData = cgi.FieldStorage()
         username = formData.getvalue('username',"ERROR")
         image = formData['image']
-        success, message = save_image(image)
+        success, message = save_image(image, username)
         if success:
+            utils.done(username+"image saved and validated")
             successHtmlMid(message)
         else:
             unsuccessHtmlMid(message)

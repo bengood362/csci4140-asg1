@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # try_change_password.cgi
 import cgi
+import utils
 def htmlTop():
     print("""Content-type:text/html\n\n
         <!DOCTYPE html>
@@ -25,7 +26,7 @@ def htmlMid(username, message=''):
         <input type="submit" value="Discard change"/>
     </form>'''.format(username))
     if message != '':
-        print "<br>"+cgi.escape(message)
+        print "<br>"+message
 
 def htmlTail():
     print('''</body>

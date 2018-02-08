@@ -14,12 +14,14 @@ def htmlTop():
             </head>
         <body>""")
 
-def cleanHTML(success, message):
+def cleanHTML(success, message=''):
     if success:
-        print('''Clean success! now redirecting...<meta http-equiv="refresh" content="0;url=../index.html" />''')
+        print('''Clean success! now redirecting...<meta http-equiv="refresh" content="0;url=../index.html?message={0}" />'''.format(cgi.escape(message)))
     else:
-        print('''Clean failed! now redirecting... <meta http-equiv="refresh" content="0;url=../index.html" />
-            ''')
+        print('''Clean failed! now redirecting... <meta http-equiv="refresh" content="0;url=../index.html={0}" />
+            '''.format(cgi.escape(message)))
+    if message != '':
+        print message
 
 def htmlTail():
     print('''</body>
@@ -30,8 +32,9 @@ if __name__ == '__main__':
         htmlTop()
 
         formData = cgi.FieldStorage()
-        success,message = db_util.clean_table(db_util.USER_TABLE)
-        cleanHTML(success, message)
+        success, message = db_util.remove_table(db_util.USER_TABLE)
+        success2, message2 = db_util.remove_table(db_util.IMAGE_TABLE)
+        cleanHTML(success and success2, message+', '+message2)
 
         htmlTail()
     except:
