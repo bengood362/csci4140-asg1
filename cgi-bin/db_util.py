@@ -111,6 +111,7 @@ def get_username(cookie):
                 err("Cannot find username with such user cookie, please login")
                 return (False,'Cannot find username with such user cookie, please login')
             else:
+                done("Username retrieved for cookie {0}".format(cookie))
                 return (True,username)
         else:
             return (False,'Cannot find any user with such cookie')
@@ -129,6 +130,7 @@ def get_cookie(username):
                 err("Cannot find cookie with such user name, please login")
                 return (False,"Cannot find cookie with such user name, please login")
             else:
+                done("Cookie retrieved for {0}".format(username))
                 return (True,cookies)
         else:
             return (False,"Cannot find any user with such user name")
@@ -136,7 +138,7 @@ def get_cookie(username):
         err(error)
         return (False,error)
 
-#NOTE: not tested
+#NOTE: duplicate of get_username(cookie), but I don't have the heart to delete it...
 def resume_session(cookie):
     try:
         curs = DatabaseInstance.curs
@@ -207,6 +209,7 @@ def entry_exist(tablename, column_key, column_val):
         curs = DatabaseInstance.curs
         stmt = "SELECT EXISTS(SELECT * FROM {0} WHERE {1}='{2}')".format(tablename, column_key, column_val)
         res = curs.execute(stmt).fetchone()[0]
+        done("entry_exist checked with {0},{1},{2},output {3}".format(tablename, column_key, column_val, res!=0))
         return res != 0
     except Exception as error:
         err(error)
@@ -238,6 +241,7 @@ def clean_table(tablename):
         curs = DatabaseInstance.curs
         curs.execute("DELETE FROM {0};".format(tablename))
         conn.commit()
+        done("table cleaned for {0}".format(tablename))
         return (True,'clean successfully')
     except Exception as error:
         err(error)
@@ -250,6 +254,7 @@ def remove_table(tablename):
         curs = DatabaseInstance.curs
         curs.execute("DROP TABLE {0};".format(tablename))
         conn.commit()
+        done("table removed for {0}".format(tablename))
         return (True,"Success")
     except Exception as error:
         err(error)
