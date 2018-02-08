@@ -34,7 +34,7 @@ def upload_image(username):
         <input type="hidden" name="username" value="{0}" />
         <input type="file" name="image" id="image" accept="image/jpeg,image/jpg,image/gif,image/png" required/>
         <br>
-        visiblity: <select name="visiblity">
+        visibility: <select name="visibility">
           <option value="public">public</option>
           <option value="private">private</option>
         </select>

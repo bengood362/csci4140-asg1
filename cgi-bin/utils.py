@@ -3,7 +3,7 @@ import inspect
 import sys
 import os
 from datetime import datetime
-VERBOSE = True
+VERBOSE = False
 LOGFILE = 'log.txt'
 # TESTED!
 def get_client_cookie():
@@ -39,7 +39,8 @@ def done(s):
         log("done@"+caller+": "+str(s))
 
 def log(s):
-    with open(LOGFILE,'a+') as f:
-        time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-        f.write(time+':\t'+str(s))
-        f.write('\n')
+    if VERBOSE:
+        with open(LOGFILE,'a+') as f:
+            time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            f.write(time+':\t'+str(s))
+            f.write('\n')

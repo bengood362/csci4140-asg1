@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # upload_image.cgi
+# NOTE: EDIT TAKE PLACES HERE
+
 import db_util
 import utils
 import os
@@ -34,9 +36,30 @@ def htmlTail():
     print("""</body>
             </html>""")
 
-def startEditHtmlMid(file_path=''):
+def startEditHtmlMid(file_path, username, visibility, last_filter="None"):
+    new_file_path = os.path.join("..",file_path) #upload not in cgi bin
     print("""<h1>Edit</h1>
-        """)
+    <img src={0} alt='you have a slow internet if you can read this'/>
+    <form method="post" action="upload_image.py" id="change_filter"/>
+        <input type="hidden" value={2} name="visibility"/>
+        <input type="hidden" value={1} name="username"/>
+        <input type="hidden" value={0} name="file_path"/>
+        <input type="hidden" value={3} name="last_filter"/>
+        <input type="submit" value="None" name="filter" />
+        <input type="submit" value="filter1" name="filter" />
+        <input type="submit" value="filter2" name="filter" />
+    </form>
+    <hr>
+    <form method="post" action="try_finish.py" id="finish">
+        <input type="hidden" value={2} name="visibility"/>
+        <input type="hidden" value={1} name="username"/>
+        <input type="hidden" value={0} name="file_path"/>
+        <input type="hidden" value={3} name="last_filter"/>
+        <input type="submit" value="undo" name="option" />
+        <input type="submit" value="discard" name="option" />
+        <input type="submit" value="finish" name="option" />
+    </form>
+        """.format(new_file_path, username, visibility, last_filter))
 
 
 def unsuccessHtmlMid(message=''):
@@ -98,12 +121,14 @@ if __name__ == '__main__':
         cookies = utils.get_client_cookie()
         formData = cgi.FieldStorage()
         username = formData.getvalue("username","ERROR")
-        visiblity = formData.getvalue("visiblity", "public")
+        visibility = formData.getvalue("visibility", "public")
+        filter_chose = formData.getvalue("filter", "None")
+        last_filter = formData.getvalue("last_filter", "None")
         image = formData['image']
         success, message = save_image(image, username)
         if success:
             utils.done(username+"image saved and validated")
-            startEditHtmlMid(message)
+            startEditHtmlMid(message, username, visibility)
         else:
             unsuccessHtmlMid(message)
         htmlTail()
