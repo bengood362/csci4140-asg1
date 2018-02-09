@@ -14,6 +14,18 @@ def htmlTop():
             </head>
         <body><h1>Web instagram</h1>""")
 
+def not_login_auth_info(message=''):
+    print('''<h2>Hello!</h2>
+    <form action="login.py" method="post" id="logout">
+        <input type="submit" value="Login" method="post"/>
+    </form>
+    <form action="register.py" method="post" id="change">
+        <input type="submit" value="Register" method="post"/>
+    </form>
+    ''')
+    if message != '':
+        print("<br>{0}<br>".format(message))
+
 def auth_info(username, message=''):
     print('''<h2>Hello {0}!</h2>
     <form action="try_logout.py" method="post" id="logout">
@@ -43,10 +55,13 @@ def upload_image(username):
     </form>
     '''.format(username))
 
-def instagram_feed(limit=10):
-    for i in range(limit):
-        print('''instagram_feed''')
-        print('<br>')
+def all_instagram_feed():
+    print('''all_instagram_feed''')
+    print('<br>')
+
+def public_instagram_feed():
+    print('''public_instagram_feed''')
+    print('<br>')
 
 def htmlTail():
     print('''</body>
@@ -62,12 +77,18 @@ if __name__ == '__main__':
         message = formData.getvalue('message', '')
 
         htmlTop()
-
-        auth_info(username,message)
-        print "<hr>"
-        upload_image(username)
-        print "<hr>"
-        instagram_feed(5)
+        if get_username_success:
+            auth_info(username,message)
+            print "<hr>"
+            upload_image(username)
+            print "<hr>"
+            all_instagram_feed()
+        else:
+            not_login_auth_info(message)
+            print "<hr>"
+            print "If you want to upload a photo, please login!"
+            print "<hr>"
+            public_instagram_feed()
 
         htmlTail()
     except:

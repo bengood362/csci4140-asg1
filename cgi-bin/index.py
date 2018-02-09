@@ -15,9 +15,9 @@ def htmlTop():
                  <body>""")
     print("<h1>Start! Login or register web instagram today!</h1>")
 
-def loginMid(username):
-    print('''Logging in with cookie! now redirecting... <meta http-equiv="refresh" content="0;url=login_index.py?username={0}" />
-    '''.format(username))
+def loginMid():
+    print('''Logging in with cookie! now redirecting... <meta http-equiv="refresh" content="0;url=login_index.py" />
+    ''')
 
 def htmlMid():
     print('''<form method="post" action="login.py">
@@ -39,10 +39,12 @@ if __name__ == '__main__':
             auth_cookie = cookies['cookie']
             auth_success, message=db_util.get_username(auth_cookie)
             if auth_success:
-                username=message
-                loginMid(username)
+                username = message
+                loginMid()
             else:
-                htmlMid()
+                # htmlMid()
+                # Disabled it because non-user should be able to view photo too
+                loginMid()
         else:
             htmlMid()
         htmlTail()

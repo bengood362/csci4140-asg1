@@ -40,11 +40,7 @@ if __name__ == '__main__':
         file_dir = os.path.dirname(file_path)
         file_name = os.path.basename(file_path)
 
-        if option == "Undo":
-            new_filename = '_'.join(file_name.split('_')[1:]) # remove edited_
-            utils.unlink_file(file_path)
-            utils.done(username+":Undo")
-        elif option == "Discard":
+        if option == "Discard":
             discardHTMLMid(file_path)
             utils.done(username+":Discard")
         elif option == "Finish": # Should become edited_XXXXXX.EXT too, because I am lazy
