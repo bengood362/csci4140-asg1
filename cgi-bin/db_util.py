@@ -236,7 +236,11 @@ def update_user(username, old_pass, password):
     try:
         conn = DatabaseInstance.conn
         curs = DatabaseInstance.curs
-        saved_pass = curs.execute("SELECT password FROM user WHERE username='{0}'".format(username)).fetchone()[0]
+        res = curs.execute("SELECT password FROM user WHERE username='{0}'".format(username)).fetchone()
+        if res == None:
+            err(username+":password cannot be fetched for this user")
+            return (False,username+":pasword cannot be fetched for this user")
+        saved_pass = res[0]
         if saved_pass != old_pass:
             err(username+":old password is incorrect")
             return (False,"old password does not match")
@@ -244,7 +248,7 @@ def update_user(username, old_pass, password):
             curs.execute("UPDATE user SET password='{0}' WHERE username='{1}';".format(password, username))
             conn.commit()
             done(username+":password changed")
-            return (True,'password has changed, please login again')
+            return (True,'password has changed')
     except Exception as error:
         err(username+str(error))
         return (False,str(error))

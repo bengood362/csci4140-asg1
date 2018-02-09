@@ -16,7 +16,7 @@ def htmlTop():
 def redirectMid(success, message, username):
     if success:
         print('''Success! now redirecting...
-            <meta http-equiv="refresh" content="0;url=login.py?message={0}"/>'''.format(cgi.escape(message)))
+            <meta http-equiv="refresh" content="0;url=login_index.py?message={0}"/>'''.format(cgi.escape(message)))
     else:
         print('''Failed...now redirecting...
             <meta http-equiv="refresh" content="0;url=change_password.py?message={0}"/>'''.format(cgi.escape(message),cgi.escape(username)))

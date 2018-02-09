@@ -20,7 +20,11 @@ def htmlMid(message=''):
     <button type="submit" form="auth" value="Login">Login</button>
     <form action="register.py" method="get">
         <input type="submit" value="Not registered? register today!" method="post"/>
+    </form>
+    <form action="login_index.py" method="get">
+        <input type="submit" value="Back home">
     </form>''')
+
     if message != '':
         print "<br>"+cgi.escape(message)
 

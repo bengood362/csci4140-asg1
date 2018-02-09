@@ -19,10 +19,10 @@ def htmlMid(username, message=''):
         original password: <input type="password" name="password_o" required><br>
         new password: <input type="password" name="password_n" required><br>
         retype new password: <input type="password" name="password_n2" required><br><br>
+        <button type="submit" form="change" value="Change password">Change password</button>
     </form>
-    <button type="submit" form="change" value="Change password">Change password</button>
-    <form action="login_index.py" method="get">
-        <input type="hidden" name="username" value="{0}"/>
+
+    <form action="login_index.py" method="post">
         <input type="submit" value="Discard change"/>
     </form>'''.format(username))
     if message != '':
