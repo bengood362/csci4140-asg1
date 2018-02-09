@@ -39,33 +39,41 @@ def htmlTail():
 def startEditHtmlMid(file_path, username, visibility, filter_chosen="None"):
     new_file_path = os.path.join("..",file_path) #upload not in cgi bin
     if filter_chosen == "None":
-        disabled = "disabled"
+        disabled_undo = "disabled"
+        disabled_fin = ""
     else:
-        disabled = ""
+        disabled_undo = ""
+        disabled_fin = "disabled"
     print("""<h1>Edit photo</h1>
     <img src="{0}" width="600" alt='Something is broken'/>
     <form method="post" action="upload_image.py" id="change_filter"/>
         <input type="hidden" value={2} name="visibility"/>
         <input type="hidden" value={1} name="username"/>
-        <input type="hidden" value={0} name="file_path"/>
+        <input type="hidden" value={5} name="file_path"/>
         <input type="hidden" value={3} name="filter"/>
-        <input type="submit" value="Border" name="filter_chosen" />
-        <input type="submit" value="Lomo" name="filter_chosen" />
-        <input type="submit" value="Lens_Flare" name="filter_chosen" />
-        <input type="submit" value="Black_White" name="filter_chosen" />
-        <input type="submit" value="Blur" name="filter_chosen" />
+        <input type="submit" value="Border" name="filter_chosen" {6}/>
+        <input type="submit" value="Lomo" name="filter_chosen" {6}/>
+        <input type="submit" value="Lens_Flare" name="filter_chosen" {6}/>
+        <input type="submit" value="Black_White" name="filter_chosen" {6}/>
+        <input type="submit" value="Blur" name="filter_chosen" {6}/>
     </form>
     <hr>
+    <form method="post" action="upload_image.py" id="undo" style="display: inline;">
+        <input type="hidden" value={2} name="visibility"/>
+        <input type="hidden" value={1} name="username"/>
+        <input type="hidden" value={5} name="file_path"/>
+        <input type="hidden" value=None name="filter_chosen"/>
+        <input type="submit" value="Undo" name="option" {4}/>
+    </form>
     <form method="post" action="try_finish.py" id="finish">
         <input type="hidden" value={2} name="visibility"/>
         <input type="hidden" value={1} name="username"/>
         <input type="hidden" value={5} name="file_path"/>
         <input type="hidden" value={3} name="filter_chosen"/>
-        <input type="submit" value="Undo" name="option" {4}/>
         <input type="submit" value="Discard" name="option" />
         <input type="submit" value="Finish" name="option" />
     </form>
-        """.format(cgi.escape(new_file_path), username, visibility, filter_chosen, disabled, cgi.escape(file_path)))
+        """.format(cgi.escape(new_file_path), username, visibility, filter_chosen, disabled_undo, cgi.escape(file_path), disabled_fin))
 
 
 def unsuccessHtmlMid(message=''):
@@ -90,7 +98,7 @@ def save_image(image_from_form, username):
         if image.file:
             # initialize
             full_filename = os.path.basename(image_from_form.filename)
-            # save the image
+            # save the image at UPLOAD_PATH (./upload)
             filename = '.'.join(full_filename.split('.')[:-1])
             file_extension = full_filename.split('.')[-1]
             filename = filename+'_'+uuid.uuid4().hex[8:] # prevent collides
@@ -136,8 +144,10 @@ def edit_image(file_path, filter_chosen, user):
         file_dir = os.path.dirname(file_path)
         file_name = os.path.basename(file_path)
         new_file_name = "edited_"+file_name
-        new_path = os.path.join(path_dir, new_file_name)
-        p=subprocess.Popen(["convert",file_path,"-bordercolor","black","7", new_path], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        new_path = os.path.join(file_dir, new_file_name)
+        cmds = ["convert",file_path,"-bordercolor","black","-border","7", new_path]
+        utils.log(" ".join(cmds))
+        p=subprocess.Popen(cmds, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         out, err = p.communicate()
         if out:
             utils.done(out)
@@ -145,6 +155,7 @@ def edit_image(file_path, filter_chosen, user):
         if err:
             utils.err(err)
             return (False, str(err))
+        return (True, new_path)
     elif filter_chosen == "Lomo":
         pass
     elif filter_chosen == "Lens_Flare":
@@ -166,18 +177,25 @@ if __name__ == '__main__':
         visibility = formData.getvalue("visibility", "public")
         filter_chosen = formData.getvalue("filter_chosen", "None")
         file_path = formData.getvalue("file_path")
-        if file_path: # comes from edit
-            success, message = edit_image(file_path, filter_chosen, username)
-        else: # comes from main
-            image = formData['image']
-            success, message = save_image(image, username)
-
-        if success:
-            file_path=message
-            utils.done(username+":image saved and validated")
-            startEditHtmlMid(file_path, username, visibility, filter_chosen)
+        option = formData.getvalue("option")
+        if option and option == "Undo":
+            file_path_after_undo = utils.rmv_edited(file_path)
+            utils.unlink_file(file_path)
+            startEditHtmlMid(file_path_after_undo, username, visibility, filter_chosen)
+            pass
         else:
-            unsuccessHtmlMid(message)
-        htmlTail()
+            if file_path: # comes from edit
+                success, message = edit_image(file_path, filter_chosen, username)
+            else: # comes from main
+                image = formData['image']
+                success, message = save_image(image, username)
+
+            if success:
+                file_path=message
+                utils.done(username+":image saved and validated")
+                startEditHtmlMid(file_path, username, visibility, filter_chosen)
+            else:
+                unsuccessHtmlMid(message)
+            htmlTail()
     except:
         cgi.print_exception()

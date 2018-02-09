@@ -4,9 +4,35 @@ import sys
 import os
 from datetime import datetime
 
-VERBOSE = False
-LOGGING = False
+VERBOSE = True
+LOGGING = True
 LOGFILE = 'log.txt'
+def add_edited(path):
+    file_path = os.path.dirname(path)
+    file_name = os.path.basename(path)
+    new_path = os.path.join(file_path,'edited_'+file_name)
+    return new_path
+
+def rmv_edited(path):
+    if "edited_" in path:
+        file_path = os.path.dirname(path)
+        file_name = '_'.join(os.path.basename(path).split('_')[1:])
+        new_path = os.path.join(file_path,file_name)
+        return new_path
+    else:
+        return path
+
+def unlink_file(file_path):
+    try:
+        if os.path.isfile(file_path):
+            os.unlink(file_path)
+            done("done unlinking file because discard")
+        else:
+            log(file_path)
+            log(os.getcwd())
+    except Exception as error:
+        err(error)
+
 # TESTED!
 def get_client_cookie():
     res=dict()

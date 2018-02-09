@@ -17,19 +17,8 @@ def htmlTop():
         <body>""")
 
 def discardHTMLMid(file_path):
-    unlink_file(file_path)
+    utils.unlink_file(file_path)
     print("""You have chosen to discard, now redirecting...<meta http-equiv="refresh" content="0;url=login_index.py" />""")
-
-def unlink_file(file_path):
-    try:
-        if os.path.isfile(file_path):
-            os.unlink(file_path)
-            utils.done("done unlinking file because discard")
-        else:
-            utils.log(file_path)
-            utils.log(os.getcwd())
-    except Exception as error:
-        db_util.err(error)
 
 def htmlTail():
     print('''</body>
@@ -48,12 +37,17 @@ if __name__ == '__main__':
         option = formData.getvalue('option')
 
         utils.log(file_path)
+        file_dir = os.path.dirname(file_path)
+        file_name = os.path.basename(file_path)
+
         if option == "Undo":
+            new_filename = '_'.join(file_name.split('_')[1:]) # remove edited_
+            utils.unlink_file(file_path)
             utils.done(username+":Undo")
         elif option == "Discard":
             discardHTMLMid(file_path)
             utils.done(username+":Discard")
-        elif option == "Finish":
+        elif option == "Finish": # Should become edited_XXXXXX.EXT too, because I am lazy
             utils.done(username+":Finish")
         else:
             utils.err("option cannot be recognized {0}".format(option))
