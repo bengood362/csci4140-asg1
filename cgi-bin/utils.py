@@ -4,8 +4,8 @@ import sys
 import os
 from datetime import datetime
 
-VERBOSE = True
-LOGGING = True
+VERBOSE = False
+LOGGING = False
 LOGFILE = 'log.txt'
 def add_edited(path):
     file_path = os.path.dirname(path)

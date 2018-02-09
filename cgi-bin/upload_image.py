@@ -143,8 +143,7 @@ def edit_image(file_path, filter_chosen, user):
     elif filter_chosen == "Border":
         file_dir = os.path.dirname(file_path)
         file_name = os.path.basename(file_path)
-        new_file_name = "edited_"+file_name
-        new_path = os.path.join(file_dir, new_file_name)
+        new_path = utils.add_edited(file_path)
         cmds = ["convert",file_path,"-bordercolor","black","-border","7", new_path]
         utils.log(" ".join(cmds))
         p=subprocess.Popen(cmds, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
