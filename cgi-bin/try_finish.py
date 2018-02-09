@@ -16,8 +16,7 @@ def htmlTop():
             </head>
         <body>""")
 
-def discardHTMLMid(file_path):
-    utils.unlink_file(file_path)
+def discardHTMLMid():
     print("""You have chosen to discard, now redirecting...<meta http-equiv="refresh" content="0;url=login_index.py" />""")
 
 def htmlTail():
@@ -41,7 +40,15 @@ if __name__ == '__main__':
         file_name = os.path.basename(file_path)
 
         if option == "Discard":
-            discardHTMLMid(file_path)
+            try:
+                utils.unlink_file(file_path)
+                removed_path = utils.rmv_edited(file_path)
+                if removed_path != file_path:
+                    utils.unlink_file(removed_path)
+                discardHTMLMid()
+            except:
+                # In case it does not have any edit
+                pass
             utils.done(username+":Discard")
         elif option == "Finish": # Should become edited_XXXXXX.EXT too, because I am lazy
             utils.done(username+":Finish")

@@ -89,7 +89,6 @@ if __name__ == '__main__':
             print "If you want to upload a photo, please login!"
             print "<hr>"
             public_instagram_feed()
-
         htmlTail()
     except:
         cgi.print_exception()
