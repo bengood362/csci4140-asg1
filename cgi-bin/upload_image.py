@@ -189,9 +189,33 @@ def edit_image(file_path, filter_chosen, user):
             return (True, new_path)
         else:
             return (False, message)
-        pass
     elif filter_chosen == "Black_White":
-        pass
+        ext = file_path.split('.')[-1]
+        new_path = utils.add_edited(file_path)
+        iden_success, message = utils.get_dim(file_path)
+        if not iden_success:
+            return (False, str(message))
+        width, height = message
+        cmds1=['convert',file_path,'-type','grayscale','itm.'+ext]
+        cmds2=['convert','bwgrad.png','-resize',str(width)+'x'+str(height), 'tmp.png']
+        cmds3=['composite','-compose','softlight','-gravity','center','tmp.png','itm.'+ext,new_path]
+        utils.log(' '.join(cmds2))
+        p1=subprocess.Popen(cmds1, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        out, err = p1.communicate()
+        if err:
+            utils.err(err)
+            return (False, str(err))
+        p2=subprocess.Popen(cmds2, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        out, err = p2.communicate()
+        if err:
+            utils.err(err)
+            return (False, str(err))
+        p3=subprocess.Popen(cmds3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        out, err = p3.communicate()
+        if err:
+            utils.err(err)
+            return (False, str(err))
+        return (True, new_path)
     elif filter_chosen == "Blur":
         file_dir = os.path.dirname(file_path)
         file_name = os.path.basename(file_path)
