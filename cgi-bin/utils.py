@@ -3,16 +3,9 @@ import inspect
 import sys
 import os
 from datetime import datetime
-def set_broken_pipe_off():
-    try:
-        from signal import signal, SIGPIPE, SIG_DFL
-        signal(SIGPIPE,SIG_DFL)
-    except Exception as error:
-        print error
-set_broken_pipe_off()
 
 VERBOSE = True
-LOGGING = True
+LOGGING = False
 LOGFILE = 'log.txt'
 # TESTED!
 def get_client_cookie():
