@@ -18,7 +18,7 @@ def auth_info(username, message=''):
     print('''<h2>Hello {0}!</h2>
     <form action="try_logout.py" method="post" id="logout">
         <input type="hidden" name="username" value="{0}" />
-        <input type="submit" value="logout" method="post"/>
+        <input type="submit" value="Logout" method="post"/>
     </form>
     <form action="change_password.py" method="post" id="change">
         <input type="hidden" name="username" value="{0}" />

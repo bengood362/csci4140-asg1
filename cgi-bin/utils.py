@@ -2,11 +2,26 @@
 import inspect
 import sys
 import os
+import subprocess
 from datetime import datetime
 
 VERBOSE = False
 LOGGING = False
 LOGFILE = 'log.txt'
+def get_dim(path):
+    try:
+        cmds=['identify',path]
+        p = subprocess.Popen(cmds, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        out, error = p.communicate()
+        image_iden = out.split(' ')
+        image_size = image_iden[-7]
+        width = image_size.lower().split('x')[0]
+        height = image_size.lower().split('x')[1]
+        return (True, (int(width), int(height)))
+    except Exception as error:
+        err(error)
+        return (False, error)
+
 def add_edited(path):
     file_path = os.path.dirname(path)
     file_name = os.path.basename(path)
