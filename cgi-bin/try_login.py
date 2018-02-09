@@ -21,10 +21,12 @@ def htmlTop(cookie, username):
 
 def loginHTML(success, message):
     if success:
-        print('''
-        Login success! now redirecting...<meta http-equiv="refresh" content="0;url=login_index.py" />''')
+        print('''Login success! now redirecting...
+            <meta http-equiv="refresh" content="0;url=login_index.py" />
+            ''')
     else:
-        print('''Login failed! now redirecting... <meta http-equiv="refresh" content="0;url=login.py?message={0}" />
+        print('''Login failed! now redirecting...
+            <meta http-equiv="refresh" content="0;url=login.py?message={0}" />
             '''.format(cgi.escape(message)))
 
 def htmlTail():

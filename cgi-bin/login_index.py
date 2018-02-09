@@ -22,7 +22,7 @@ def auth_info(username, message=''):
     </form>
     <form action="change_password.py" method="post" id="change">
         <input type="hidden" name="username" value="{0}" />
-        <input type="submit" value="change_password" method="post"/>
+        <input type="submit" value="Change password" method="post"/>
     </form>
     '''.format(cgi.escape(username)))
     if message != '':
