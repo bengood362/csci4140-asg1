@@ -70,7 +70,7 @@ def startEditHtmlMid(file_path, username, visibility, filter_chosen="None"):
         <input type="hidden" value={1} name="username"/>
         <input type="hidden" value={5} name="file_path"/>
         <input type="hidden" value={3} name="filter_chosen"/>
-        <input type="submit" value="Discard" name="option" />
+        <input type="submit" value="Discard" name="option" /><br>
         <input type="submit" value="Finish" name="option" />
     </form>
         """.format(cgi.escape(new_file_path), username, visibility, filter_chosen, disabled_undo, cgi.escape(file_path), disabled_fin))
@@ -141,11 +141,9 @@ def edit_image(file_path, filter_chosen, user):
     if filter_chosen == "None":
         return (True, file_path)
     elif filter_chosen == "Border":
-        file_dir = os.path.dirname(file_path)
-        file_name = os.path.basename(file_path)
         new_path = utils.add_edited(file_path)
         cmds = ["convert",file_path,"-bordercolor","black","-border","7", new_path]
-        utils.log(" ".join(cmds))
+        utils.log(user+": "+" ".join(cmds))
         p=subprocess.Popen(cmds, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         out, err = p.communicate()
         if out:
@@ -156,13 +154,59 @@ def edit_image(file_path, filter_chosen, user):
             return (False, str(err))
         return (True, new_path)
     elif filter_chosen == "Lomo":
-        pass
+        new_path = utils.add_edited(file_path)
+        cmds = ["convert", file_path, "-channel", 'R', '-level', '33%', '-channel', 'g', '-level', '33%', new_path]
+        utils.log(user+": "+" ".join(cmds))
+        p=subprocess.Popen(cmds, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        if out:
+            utils.done(out)
+            return (True, new_path)
+        if err:
+            utils.err(err)
+            return (False, str(err))
+        return (True, new_path)
     elif filter_chosen == "Lens_Flare":
+        success, message = utils.get_dim(file_path)
+        if success:
+            size = message
+            (width, height) = size
+            new_path = utils.add_edited(file_path)
+            cmds1=['convert','./lensflare.png','-resize',str(width)+'x', './tmp.png']
+            cmds2=['composite','-compose','screen','-gravity','northwest','./tmp.png',file_path,new_path]
+            p1=subprocess.Popen(cmds1, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+            out, err = p1.communicate()
+            if err:
+                utils.err(err)
+                return (False, str(err))
+            p2=subprocess.Popen(cmds2, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+            out, err = p2.communicate()
+            if out:
+                utils.done(out)
+                return (True, new_path)
+            if err:
+                return (False, str(err))
+            return (True, new_path)
+        else:
+            return (False, message)
         pass
     elif filter_chosen == "Black_White":
         pass
     elif filter_chosen == "Blur":
-        pass
+        file_dir = os.path.dirname(file_path)
+        file_name = os.path.basename(file_path)
+        new_path = utils.add_edited(file_path)
+        cmds = ["convert", file_path, '-blur', '0.5x2', new_path]
+        utils.log(user+": "+" ".join(cmds))
+        p=subprocess.Popen(cmds, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        if out:
+            utils.done(out)
+            return (True, new_path)
+        if err:
+            utils.err(err)
+            return (False, str(err))
+        return (True, new_path)
     else:
         utils.err("The filter cannot be recognized: {0}".format(filter_chosen))
         return (False, "The filter cannot be recognized: {0}".format(filter_chosen))
