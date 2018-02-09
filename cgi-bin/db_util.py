@@ -102,12 +102,12 @@ def create_image(username, visibility, image_link):
 
 def read_public_image(page_number, limit=8):
     try:
-        index_from = (page_number-1)*limit
-        index_to = (page_number)*limit
         conn = DatabaseInstance.conn
         curs = DatabaseInstance.curs
-        res = curs.execute("SELECT image_url, timestamp FROM image_link WHERE private=0 ORDER BY timestamp LIMIT {0}".format(limit)).fetchall()[index_from:index_to]
-        photo_links = res[index_from:min(index_to,len(res))]
+        res = curs.execute("SELECT image_url, timestamp FROM image_link WHERE private=0 ORDER BY timestamp LIMIT {0}".format(limit)).fetchall()
+        index_from = min(len(res),(page_number-1)*limit)
+        index_to = min(len(res),(page_number)*limit)
+        photo_links = res[index_from:index_to]
         done("successfully fetched public images")
         return (True, photo_links)
     except Exception as error:
@@ -116,12 +116,12 @@ def read_public_image(page_number, limit=8):
 
 def read_private_image(username, page_number, limit=8):
     try:
-        index_from = (page_number-1)*limit
-        index_to = (page_number)*limit
         conn = DatabaseInstance.conn
         curs = DatabaseInstance.curs
         res = curs.execute("SELECT image_url, timestamp FROM image_link WHERE owner={1} ORDER BY timestamp LIMIT {0}".format(limit, username)).fetchall()
-        photo_links = res[index_from:min(index_to,len(res))]
+        index_from = min(len(res),(page_number-1)*limit)
+        index_to = min(len(res),(page_number)*limit)
+        photo_links = res[index_from:index_to]
         done("successfully fetched public images")
         return (True, photo_links)
     except Exception as error:
