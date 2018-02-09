@@ -21,7 +21,8 @@ def htmlTop(cookie, username):
 
 def loginHTML(success, message):
     if success:
-        print('''Login success! now redirecting...
+        print('''
+        Login success! now redirecting...
             <meta http-equiv="refresh" content="0;url=login_index.py" />
             ''')
     else:

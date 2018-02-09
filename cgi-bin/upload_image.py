@@ -49,18 +49,18 @@ def startEditHtmlMid(file_path, username, visibility, filter_chosen="None"):
         <input type="hidden" value={1} name="username"/>
         <input type="hidden" value={0} name="file_path"/>
         <input type="hidden" value={3} name="filter"/>
-        <input type="submit" value="Border" name="filter" />
-        <input type="submit" value="Lomo" name="filter" />
-        <input type="submit" value="Lens_Flare" name="filter" />
-        <input type="submit" value="Black_White" name="filter" />
-        <input type="submit" value="Blur" name="filter" />
+        <input type="submit" value="Border" name="filter_chosen" />
+        <input type="submit" value="Lomo" name="filter_chosen" />
+        <input type="submit" value="Lens_Flare" name="filter_chosen" />
+        <input type="submit" value="Black_White" name="filter_chosen" />
+        <input type="submit" value="Blur" name="filter_chosen" />
     </form>
     <hr>
     <form method="post" action="try_finish.py" id="finish">
         <input type="hidden" value={2} name="visibility"/>
         <input type="hidden" value={1} name="username"/>
         <input type="hidden" value={5} name="file_path"/>
-        <input type="hidden" value={3} name="filter"/>
+        <input type="hidden" value={3} name="filter_chosen"/>
         <input type="submit" value="Undo" name="option" {4}/>
         <input type="submit" value="Discard" name="option" />
         <input type="submit" value="Finish" name="option" />
@@ -96,7 +96,7 @@ def save_image(image_from_form, username):
             filename = filename+'_'+uuid.uuid4().hex[8:] # prevent collides
             full_filename = filename+'.'+file_extension
             path = os.path.join(UPLOAD_PATH, full_filename)
-            with open(path, 'wb') as f:
+            with open(path, 'wb+') as f:
                 f.write(image_from_form.file.read())
             # identify if the image is valid
             # Identify output format: ['./upload/yr3sem2cusis_b7bc47388f6134a559a69a03.png', 'PNG', '1852x1092', '1852x1092+0+0', '8-bit', 'sRGB', '360167B', '0.000u', '0:00.000\n']
@@ -131,9 +131,20 @@ def save_image(image_from_form, username):
 
 def edit_image(file_path, filter_chosen, user):
     if filter_chosen == "None":
-        pass
+        return (True, file_path)
     elif filter_chosen == "Border":
-        pass
+        file_dir = os.path.dirname(file_path)
+        file_name = os.path.basename(file_path)
+        new_file_name = "edited_"+file_name
+        new_path = os.path.join(path_dir, new_file_name)
+        p=subprocess.Popen(["convert",file_path,"-bordercolor","black","7", new_path], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        if out:
+            utils.done(out)
+            return (True, new_path)
+        if err:
+            utils.err(err)
+            return (False, str(err))
     elif filter_chosen == "Lomo":
         pass
     elif filter_chosen == "Lens_Flare":
@@ -144,6 +155,7 @@ def edit_image(file_path, filter_chosen, user):
         pass
     else:
         utils.err("The filter cannot be recognized: {0}".format(filter_chosen))
+        return (False, "The filter cannot be recognized: {0}".format(filter_chosen))
 
 if __name__ == '__main__':
     try:
@@ -152,18 +164,18 @@ if __name__ == '__main__':
         formData = cgi.FieldStorage()
         username = formData.getvalue("username","ERROR")
         visibility = formData.getvalue("visibility", "public")
-        filter_chosen = formData.getvalue("filter", "None")
+        filter_chosen = formData.getvalue("filter_chosen", "None")
         file_path = formData.getvalue("file_path")
         if file_path: # comes from edit
-            edit_image(file_path, filter_chosen, username)
-            pass
+            success, message = edit_image(file_path, filter_chosen, username)
         else: # comes from main
             image = formData['image']
             success, message = save_image(image, username)
 
         if success:
+            file_path=message
             utils.done(username+":image saved and validated")
-            startEditHtmlMid(message, username, visibility)
+            startEditHtmlMid(file_path, username, visibility, filter_chosen)
         else:
             unsuccessHtmlMid(message)
         htmlTail()

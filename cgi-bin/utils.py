@@ -4,7 +4,7 @@ import sys
 import os
 from datetime import datetime
 
-VERBOSE = True
+VERBOSE = False
 LOGGING = False
 LOGFILE = 'log.txt'
 # TESTED!
