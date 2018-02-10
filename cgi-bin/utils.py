@@ -8,6 +8,17 @@ from datetime import datetime
 VERBOSE = False
 LOGGING = False
 LOGFILE = 'log.txt'
+
+def resize_to_200(file_path):
+    new_path = add_resized(file_path)
+    cmds = ["convert",file_path,'-resize','200x200',new_path]
+    p=subprocess.Popen(cmds, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    out, error = p.communicate()
+    if error:
+        err(error)
+        return (False, str(error))
+    return (True, new_path)
+
 def get_dim(path):
     try:
         cmds=['identify',path]
@@ -22,11 +33,26 @@ def get_dim(path):
         err(error)
         return (False, error)
 
+def add_resized(path):
+    file_path = os.path.dirname(path)
+    file_name = os.path.basename(path)
+    new_path = os.path.join(file_path,'resized_'+file_name)
+    return new_path
+
 def add_edited(path):
     file_path = os.path.dirname(path)
     file_name = os.path.basename(path)
     new_path = os.path.join(file_path,'edited_'+file_name)
     return new_path
+
+def rmv_resized(path):
+    if "resized" in path:
+        file_path = os.path.dirname(path)
+        file_name = '_'.join(os.path.basename(path).split('_')[1:])
+        new_path = os.path.join(file_path,file_name)
+        return new_path
+    else:
+        return path
 
 def rmv_edited(path):
     if "edited_" in path:
@@ -41,7 +67,7 @@ def unlink_file(file_path):
     try:
         if os.path.isfile(file_path):
             os.unlink(file_path)
-            done("done unlinking file because discard")
+            done("done unlinking file because discard/ undo")
         else:
             log(file_path)
             log(os.getcwd())

@@ -15,8 +15,7 @@ except:
     DATABASE = "csci4140.db"
 # Should not modify USER_TABLE and IMAGE_TABLE!!!!!!!
 USER_TABLE = "user"
-PRIVATE_IMAGE_TABLE = "private_img"
-PUBLIC_IMAGE_TABLE = "public_img"
+IMAGE_TABLE = "image_link"
 """
 @ DatabaseInstance has these object:
 - conn | connection
@@ -50,7 +49,7 @@ class DatabaseInstance(object):
                 owner TEXT,
                 private INTEGER,
                 image_url TEXT,
-                Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                Timestamp TEXT
             )''')
             conn.commit()
             return conn, curs
@@ -91,8 +90,13 @@ def create_image(username, visibility, image_link):
     try:
         conn = DatabaseInstance.conn
         curs = DatabaseInstance.curs
+        if visibility == "public":
+            private = 0
+        else:
+            private = 1
+        timestamp = datetime.now().strftime('%Y%m%d')
         # Image name statistically won't collide because there is uuid.uuid4().hex[8:] appended
-        curs.execute("INSERT INTO private_img VALUES('{0}',{1},'{2}')".format(username, visibility, image_link))
+        curs.execute("INSERT INTO image_link VALUES('{0}',{1},'{2}')".format(username, private, image_link, timestamp))
         conn.commit()
         done(username+":create image success")
         return (True, "create_image_success")
@@ -102,9 +106,11 @@ def create_image(username, visibility, image_link):
 
 def read_public_image(page_number, limit=8):
     try:
+        page_number = int(page_number)
+        limit = int(limit)
         conn = DatabaseInstance.conn
         curs = DatabaseInstance.curs
-        res = curs.execute("SELECT image_url, timestamp FROM image_link WHERE private=0 ORDER BY timestamp LIMIT {0}".format(limit)).fetchall()
+        res = curs.execute("SELECT image_url, timestamp FROM image_link WHERE private=0 ORDER BY Timestamp LIMIT {0}".format(limit)).fetchall()
         index_from = min(len(res),(page_number-1)*limit)
         index_to = min(len(res),(page_number)*limit)
         photo_links = res[index_from:index_to]
@@ -114,11 +120,14 @@ def read_public_image(page_number, limit=8):
         err(error)
         return (False,str(error))
 
-def read_private_image(username, page_number, limit=8):
+def read_logged_image(username, page_number, limit=8):
     try:
+        page_number = int(page_number)
+        limit = int(limit)
+        username = str(username)
         conn = DatabaseInstance.conn
         curs = DatabaseInstance.curs
-        res = curs.execute("SELECT image_url, timestamp FROM image_link WHERE owner={1} ORDER BY timestamp LIMIT {0}".format(limit, username)).fetchall()
+        res = curs.execute("SELECT image_url, timestamp FROM image_link WHERE ((owner='{1}' and private=1) or (private=0)) ORDER BY Timestamp LIMIT {0}".format(limit, username)).fetchall()
         index_from = min(len(res),(page_number-1)*limit)
         index_to = min(len(res),(page_number)*limit)
         photo_links = res[index_from:index_to]
