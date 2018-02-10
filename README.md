@@ -1,7 +1,11 @@
 # csci4140-asg1
+This is a online photo album service that allow you to upload public or private images. This service is written by native python & python cgi & html, without javascript.
 ## Live demo hosted by Openshift
 the demo website for the app is here:
+
 http://csci4140-asg1-csci4140-asg1.7e14.starter-us-west-2.openshiftapps.com/
+
+The hosting server is not very stable, so whenever you have **Application is not available** you should refresh and send the form request again. It will eventually success.
 ## Prerequisite
 Python 2.7
 ## Starter
