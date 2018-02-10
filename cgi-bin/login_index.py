@@ -24,7 +24,7 @@ def not_login_auth_info(message=''):
     </form>
     ''')
     if message != '':
-        print("<br>{0}<br>".format(message))
+        print("<br>Message: {0}<br>".format(message))
 
 def auth_info(username, message=''):
     print('''<h2>Hello {0}!</h2>
@@ -38,7 +38,7 @@ def auth_info(username, message=''):
     </form>
     '''.format(cgi.escape(username)))
     if message != '':
-        print("<br>{0}<br>".format(message))
+        print("<br>Message: {0}<br>".format(message))
 
 def paging_html(total_page_number,current_page):
     total_page_number = int(total_page_number)

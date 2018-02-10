@@ -2,6 +2,7 @@
 # try_change_password.cgi
 import cgi
 import db_util
+import utils
 def htmlTop():
     print("Content-type:text/html")
     print("""
@@ -19,7 +20,7 @@ def redirectMid(success, message, username):
             <meta http-equiv="refresh" content="0;url=login_index.py?message={0}"/>'''.format(cgi.escape(message)))
     else:
         print('''Failed...now redirecting...
-            <meta http-equiv="refresh" content="0;url=change_password.py?message={0}"/>'''.format(cgi.escape(message),cgi.escape(username)))
+            <meta http-equiv="refresh" content="0;url=change_password.py?message={0}"/>'''.format(cgi.escape(message)))
 
 
 def htmlTail():
@@ -28,12 +29,19 @@ def htmlTail():
 
 if __name__ == '__main__':
     try:
+        htmlTop()
+
         formData = cgi.FieldStorage()
-        username = formData.getvalue('username','ERROR')
+        cookies = utils.get_client_cookie()
+        auth_cookie = cookies.get('cookie','')
+        success, message = db_util.get_username(auth_cookie)
+        if success:
+            username = message
+        else:
+            username = "ERROR"
         password_o = formData.getvalue('password_o','')
         password_n = formData.getvalue('password_n','')
         password_n2 = formData.getvalue('password_n2','')
-        htmlTop()
 
         if password_n != password_n2:
             redirectMid(False, "new password does not match", username)
