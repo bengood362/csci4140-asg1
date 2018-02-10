@@ -116,6 +116,7 @@ def save_image(image_from_form, username):
                 image_size = image_iden[-7]
                 shown_ext = file_extension
                 if not ext_equal(shown_ext, image_ext):
+                    utils.unlink_file(path)
                     utils.err("{0} {3}: image extension does not match: shown {2}, but actually {1}".format(username, image_ext, shown_ext, full_filename))
                     return (False, "image extension does not match")
             elif err:
