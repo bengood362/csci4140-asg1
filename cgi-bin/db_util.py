@@ -110,7 +110,7 @@ def read_public_image(page_number, limit=8):
         limit = int(limit)
         conn = DatabaseInstance.conn
         curs = DatabaseInstance.curs
-        res = curs.execute("SELECT image_url, Timestamp FROM image_link WHERE private=0 ORDER BY Timestamp DESC LIMIT {0}".format(limit)).fetchall()
+        res = curs.execute("SELECT image_url, Timestamp FROM image_link WHERE private=0 ORDER BY Timestamp DESC").fetchall()
         index_from = min(len(res),(page_number-1)*limit)
         index_to = min(len(res),(page_number)*limit)
         photo_links = res[index_from:index_to]
@@ -127,7 +127,7 @@ def read_logged_image(username, page_number, limit=8):
         username = str(username)
         conn = DatabaseInstance.conn
         curs = DatabaseInstance.curs
-        res = curs.execute("SELECT image_url, Timestamp FROM image_link WHERE ((owner='{1}' and private=1) or (private=0)) ORDER BY Timestamp DESC LIMIT {0}".format(limit, username)).fetchall()
+        res = curs.execute("SELECT image_url, Timestamp FROM image_link WHERE ((owner='{0}' and private=1) or (private=0)) ORDER BY Timestamp DESC".format(username)).fetchall()
         index_from = min(len(res),(page_number-1)*limit)
         index_to = min(len(res),(page_number)*limit)
         photo_links = res[index_from:index_to]
