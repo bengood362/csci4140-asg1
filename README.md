@@ -8,6 +8,7 @@ Python 2.7
 start our app by cloning us first.
 
 `git clone https://github.com/bengood362/csci4140-asg1/`
+
 `python app.py`
 
 Then checkout the site https://0.0.0.0:8080
