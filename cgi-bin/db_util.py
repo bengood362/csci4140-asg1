@@ -115,7 +115,8 @@ def read_public_image(page_number, limit=8):
         index_to = min(len(res),(page_number)*limit)
         photo_links = res[index_from:index_to]
         done("successfully fetched public images")
-        return (True, photo_links, (len(res)-1)//8+1)
+        total_page = max(1, ((len(res)-1)//8)+1)
+        return (True, photo_links, total_page)
     except Exception as error:
         err(error)
         return (False,str(error), 0)
@@ -132,7 +133,8 @@ def read_logged_image(username, page_number, limit=8):
         index_to = min(len(res),(page_number)*limit)
         photo_links = res[index_from:index_to]
         done("successfully fetched public images")
-        return (True, photo_links, (len(res)-1)//8+1)
+        total_page = max(1, ((len(res)-1)//8)+1)
+        return (True, photo_links, total_page)
     except Exception as error:
         err(error)
         return (False,str(error), 0)

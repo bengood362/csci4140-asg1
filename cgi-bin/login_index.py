@@ -143,7 +143,7 @@ if __name__ == '__main__':
         auth_cookie = cookies.get('cookie',"ERROR")
         get_username_success, username = db_util.get_username(auth_cookie)
         message = formData.getvalue('message', '')
-        page_number = formData.getvalue('page', '1')
+        page_number = formData.getvalue('page', 1)
         page_option = formData.getvalue('page_option', '')
         utils.log(page_number)
         if page_option == "Next page":
