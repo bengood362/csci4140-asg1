@@ -23,7 +23,7 @@ def discardHTMLMid():
 
 def finishHTMLMid():
     print("""Success! now redirecting to index...
-        
+        <meta http-equiv="refresh" content="0;url=login_index.py" />
         """)
 
 def htmlTail():
@@ -58,14 +58,15 @@ if __name__ == '__main__':
                 pass
             utils.done(username+":Discard")
         elif option == "Finish":
-            create_entry_success, message = db_util.create_image(username, visibility, file_path)
+            create_entry_success, create_entry_message = db_util.create_image(username, visibility, file_path)
             if not create_entry_success:
-                print message
+                print create_entry_message
             resize_success, resize_message = utils.resize_to_200(file_path)
             if not resize_success:
-                print new_path
+                print resize_message
             else:
                 new_path = resize_message
+            # NOTE: Not sure if I need to delete the file before edit if I have edited it
             finishHTMLMid()
             utils.done(username+":Finish")
         else:
