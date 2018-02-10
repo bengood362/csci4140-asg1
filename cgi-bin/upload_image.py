@@ -48,8 +48,8 @@ def startEditHtmlMid(file_path, username, visibility, filter_chosen="None"):
         <img src="{0}" width="600" alt='Something is broken, please try again'/>
         <form method="post" action="upload_image.py" id="change_filter"/>
             <input type="hidden" value={2} name="visibility"/>
-            <input type="hidden" value={1} name="username"/>
-            <input type="hidden" value={5} name="file_path"/>
+            <input type="hidden" value='{1}' name="username"/>
+            <input type="hidden" value='{5}' name="file_path"/>
             <input type="hidden" value={3} name="filter"/>
             <input type="submit" value="Border" name="filter_chosen" {6}/>
             <input type="submit" value="Lomo" name="filter_chosen" {6}/>
@@ -60,15 +60,15 @@ def startEditHtmlMid(file_path, username, visibility, filter_chosen="None"):
         <hr>
         <form method="post" action="upload_image.py" id="undo" style="display: inline;">
             <input type="hidden" value={2} name="visibility"/>
-            <input type="hidden" value={1} name="username"/>
-            <input type="hidden" value={5} name="file_path"/>
+            <input type="hidden" value='{1}' name="username"/>
+            <input type="hidden" value='{5}' name="file_path"/>
             <input type="hidden" value=None name="filter_chosen"/>
             <input type="submit" value="Undo" name="option" {4}/>
         </form>
         <form method="post" action="try_finish.py" id="finish">
             <input type="hidden" value={2} name="visibility"/>
-            <input type="hidden" value={1} name="username"/>
-            <input type="hidden" value={5} name="file_path"/>
+            <input type="hidden" value='{1}' name="username"/>
+            <input type="hidden" value='{5}' name="file_path"/>
             <input type="hidden" value={3} name="filter_chosen"/>
             <input type="submit" value="Discard" name="option" /><br>
             <input type="submit" value="Finish" name="option" />
