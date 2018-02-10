@@ -108,7 +108,7 @@ def instagram_feed(username, loggedin, page_number):
             resized_path = os.path.join('..',resized_path)
             path = os.path.join('..',path)
             print('''
-            <a href="{1}">
+            <a target="_blank" href="{1}">
                 <img src="{0}" alt="Something broke"/>
             </a>
                 '''.format(resized_path, path))
