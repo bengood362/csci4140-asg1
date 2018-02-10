@@ -21,10 +21,23 @@ def discardHTMLMid():
         <meta http-equiv="refresh" content="0;url=login_index.py" />
         """)
 
-def finishHTMLMid():
-    print("""Success! now redirecting to index...
-        <meta http-equiv="refresh" content="0;url=login_index.py" />
-        """)
+def finishHTMLMid(file_path):
+    if 'HTTP_REFERER' in os.environ:
+        # print(os.environ["HTTP_REFERER"])
+        # http://0.0.0.0:8080/cgi-bin/upload_image.py
+        url = '/'.join(os.environ["HTTP_REFERER"].split('/')[:-2])
+    else:
+        url = 'None'
+    new_file_path = os.path.join('..',file_path)
+    permaurl = url+'/'+file_path
+
+    print("""<h1>Finish</h1>
+        <img src="{0}" alt="Something broken" width="600"/><br>
+        Permaurl: <a href="{1}">{1}</a>
+        <form action="login_index.py" method="POST">
+            <input type="submit" value="Back to home" />
+        </form>
+        """.format(new_file_path, permaurl))
 
 def htmlTail():
     print('''</body>
@@ -67,7 +80,7 @@ if __name__ == '__main__':
             else:
                 new_path = resize_message
             # NOTE: Not sure if I need to delete the file before edit if I have edited it
-            finishHTMLMid()
+            finishHTMLMid(file_path)
             utils.done(username+":Finish")
         else:
             utils.err("option cannot be recognized {0}".format(option))

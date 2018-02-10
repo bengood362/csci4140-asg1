@@ -54,15 +54,10 @@ def paging_html(total_page_number,current_page):
     print('''
     <form action="login_index.py" method="POST" style="float: left;">
         <input type="submit" value="Previous page" name="page_option" {2}/>
-    </form>
-    <form action="login_index.py" method="POST" style="float: left;">
         &nbsp;&nbsp;&nbsp;&nbsp;
         Page <input style="width: 20px;" type="text" name="page" value="{1}" placeholder="{1}"/> of {0}
         <input type="submit" value="OK" name="page_option" />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-    </form>
-    <form action="login_index.py" method="POST" style="float: left;">
         <input type="submit" value="Next page" name="page_option" {3}/>
     </form>
     '''.format(total_page_number, current_page, disable_prev, disable_next))
