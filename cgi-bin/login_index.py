@@ -57,7 +57,7 @@ def paging_html(total_page_number,current_page):
     </form>
     <form action="login_index.py" method="POST" style="float: left;">
         &nbsp;&nbsp;&nbsp;&nbsp;
-        Page <input style="width: 20px;" type="number" name="page" value="{1}" placeholder="{1}" min="1" max="{0}"/> of {0}
+        Page <input style="width: 20px;" type="text" name="page" value="{1}" placeholder="{1}"/> of {0}
         <input type="submit" value="OK" name="page_option" />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -84,23 +84,26 @@ def upload_image(username):
     '''.format(username))
 
 def instagram_feed(username, loggedin, page_number):
-    page_number = int(page_number)
+    try:
+        page_number = int(page_number)
+    except:
+        print("Not a number")
+
     if loggedin:
-        success, res, total_page = db_util.read_logged_image(username, page_number, 8)
-        if page_number > total_page:
-            page_number = total_page
-            success, res, total_page = db_util.read_logged_image(username, page_number, 8)
-        elif page_number < 1:
-            page_number = 1
-            success, res, total_page = db_util.read_logged_image(username, page_number, 8)
+        f = db_util.read_logged_image
     else:
-        success, res, total_page = db_util.read_public_image(page_number, 8)
-        if page_number > total_page:
-            page_number = total_page
-            success, res, total_page = db_util.read_logged_image(username, page_number, 8)
-        elif page_number < 1:
-            page_number = 1
-            success, res, total_page = db_util.read_logged_image(username, page_number, 8)
+        f = db_util.read_public_image
+
+    success, res, total_page = f(username, page_number, 8)
+    if page_number > total_page:
+        page_number = total_page
+        success, res, total_page = f(username, page_number, 8)
+        print("page number requested greater than max page number")
+    elif page_number < 1:
+        page_number = 1
+        success, res, total_page = f(username, page_number, 8)
+        print("page number requested smaller than 1")
+
     if success:
         print "<p>"
         for i in range(len(res)):
@@ -143,9 +146,13 @@ if __name__ == '__main__':
         auth_cookie = cookies.get('cookie',"ERROR")
         get_username_success, username = db_util.get_username(auth_cookie)
         message = formData.getvalue('message', '')
-        page_number = formData.getvalue('page', 1)
+        page_number = formData.getvalue('page', "1")
         page_option = formData.getvalue('page_option', '')
         utils.log(page_number)
+        if not page_number.isdigit():
+            print("Invalid page number entered, redirect to page 1")
+            page_number = 1
+
         if page_option == "Next page":
             page_number = int(page_number)+1
         elif page_option == "Previous page":

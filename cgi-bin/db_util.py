@@ -104,7 +104,7 @@ def create_image(username, visibility, image_link):
         err(error)
         return (False,str(error))
 
-def read_public_image(page_number, limit=8):
+def read_public_image(username, page_number, limit=8):
     try:
         page_number = int(page_number)
         limit = int(limit)
