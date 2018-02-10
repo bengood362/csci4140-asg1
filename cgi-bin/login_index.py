@@ -55,13 +55,27 @@ def upload_image(username):
     </form>
     '''.format(username))
 
-def all_instagram_feed():
-    print('''all_instagram_feed''')
-    print('<br>')
+def all_instagram_feed(username, page_number):
+    success, res = db_util.read_logged_image(username, page_number, 8)
+    if success:
+        # for path in res:
+        #     print('<img src="{0}" alt="Something broke"/>')
+        print res
+        print('''all_instagram_feed fetch success''')
+        print('<br>')
+    else:
+        print('''all_instagram_feed fetch failed''')
+        print('<br>')
 
-def public_instagram_feed():
-    print('''public_instagram_feed''')
-    print('<br>')
+def public_instagram_feed(page_number):
+    success, res = db_util.read_public_image(page_number, 8)
+    if success:
+        print res
+        print('''public_instagram_feed fetch success''')
+        print('<br>')
+    else:
+        print('''public_instagram_feed fetch failed''')
+        print('<br>')
 
 def htmlTail():
     print('''</body>
@@ -75,6 +89,7 @@ if __name__ == '__main__':
         auth_cookie = cookies.get('cookie',"ERROR")
         get_username_success, username = db_util.get_username(auth_cookie)
         message = formData.getvalue('message', '')
+        page_number = formData.getvalue('page', '1')
 
         htmlTop()
         if get_username_success:
@@ -82,13 +97,13 @@ if __name__ == '__main__':
             print "<hr>"
             upload_image(username)
             print "<hr>"
-            all_instagram_feed()
+            all_instagram_feed(username,page_number)
         else:
             not_login_auth_info(message)
             print "<hr>"
             print "If you want to upload a photo, please login!"
             print "<hr>"
-            public_instagram_feed()
+            public_instagram_feed(page_number)
         htmlTail()
     except:
         cgi.print_exception()

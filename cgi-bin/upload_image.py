@@ -45,7 +45,7 @@ def startEditHtmlMid(file_path, username, visibility, filter_chosen="None"):
         disabled_undo = ""
         disabled_fin = "disabled"
     print("""<h1>Edit photo</h1>
-        <img src="{0}" width="600" alt='Something is broken'/>
+        <img src="{0}" width="600" alt='Something is broken, please try again'/>
         <form method="post" action="upload_image.py" id="change_filter"/>
             <input type="hidden" value={2} name="visibility"/>
             <input type="hidden" value={1} name="username"/>
@@ -197,7 +197,7 @@ def edit_image(file_path, filter_chosen, user):
             return (False, str(message))
         width, height = message
         cmds1=['convert',file_path,'-type','grayscale','itm.'+ext]
-        cmds2=['convert','bwgrad.png','-resize',str(width)+'x'+str(height), 'tmp.png']
+        cmds2=['convert','bwgrad.png','-resize',str(width)+'x'+str(height)+r'!', 'tmp.png']
         cmds3=['composite','-compose','softlight','-gravity','center','tmp.png','itm.'+ext,new_path]
         utils.log(' '.join(cmds2))
         p1=subprocess.Popen(cmds1, stderr=subprocess.PIPE, stdout=subprocess.PIPE)

@@ -17,7 +17,14 @@ def htmlTop():
         <body>""")
 
 def discardHTMLMid():
-    print("""You have chosen to discard, now redirecting...<meta http-equiv="refresh" content="0;url=login_index.py" />""")
+    print("""You have chosen to discard, now redirecting...
+        <meta http-equiv="refresh" content="0;url=login_index.py" />
+        """)
+
+def finishHTMLMid():
+    print("""Success! now redirecting to index...
+        
+        """)
 
 def htmlTail():
     print('''</body>
@@ -47,10 +54,19 @@ if __name__ == '__main__':
                     utils.unlink_file(removed_path)
                 discardHTMLMid()
             except:
-                # In case it does not have any edit
+                # In case it does not have any edited_
                 pass
             utils.done(username+":Discard")
-        elif option == "Finish": # Should become edited_XXXXXX.EXT too, because I am lazy
+        elif option == "Finish":
+            create_entry_success, message = db_util.create_image(username, visibility, file_path)
+            if not create_entry_success:
+                print message
+            resize_success, resize_message = utils.resize_to_200(file_path)
+            if not resize_success:
+                print new_path
+            else:
+                new_path = resize_message
+            finishHTMLMid()
             utils.done(username+":Finish")
         else:
             utils.err("option cannot be recognized {0}".format(option))
