@@ -58,23 +58,41 @@ def upload_image(username):
 def all_instagram_feed(username, page_number):
     success, res = db_util.read_logged_image(username, page_number, 8)
     if success:
-        # for path in res:
-        #     print('<img src="{0}" alt="Something broke"/>')
-        print res
-        print('''all_instagram_feed fetch success''')
-        print('<br>')
+        for (path, timestamp) in res:
+            resized_path = utils.add_resized(path)
+            resized_path = os.path.join('..',resized_path)
+            path = os.path.join('..',path)
+            print('''
+            <p><a href="{1}">
+                <img src="{0}" alt="Something broke"/>
+            </a></p>
+                '''.format(resized_path, path))
+        # print res
+        # print('''all_instagram_feed fetch success''')
+        # print('<br>')
     else:
         print('''all_instagram_feed fetch failed''')
+        print(str(res))
         print('<br>')
 
 def public_instagram_feed(page_number):
     success, res = db_util.read_public_image(page_number, 8)
     if success:
-        print res
-        print('''public_instagram_feed fetch success''')
-        print('<br>')
+        for (path, timestamp) in res:
+            resized_path = utils.add_resized(path)
+            resized_path = os.path.join('..',resized_path)
+            path = os.path.join('..',path)
+            print('''
+            <p><a href="{1}">
+                <img src="{0}" alt="Something broke"/>
+            </a></p>
+                '''.format(resized_path, path))
+        # print res
+        # print('''public_instagram_feed fetch success''')
+        # print('<br>')
     else:
-        print('''public_instagram_feed fetch failed''')
+        print('''public instagram feed fetch failed''')
+        print(str(res))
         print('<br>')
 
 def htmlTail():
