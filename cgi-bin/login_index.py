@@ -52,18 +52,24 @@ def paging_html(total_page_number,current_page):
     else:
         disable_prev = ""
     print('''
-    <form action="login_index.py" method="POST">
+    <form action="login_index.py" method="POST" style="float: left;">
         <input type="submit" value="Previous page" name="page_option" {2}/>
+    </form>
+    <form action="login_index.py" method="POST" style="float: left;">
         &nbsp;&nbsp;&nbsp;&nbsp;
-        Page <input style="width: 20px;" type="number" name="page" placeholder="{1}" min="1" max="{0}"/> of {0}
+        Page <input style="width: 20px;" type="number" name="page" value="{1}" placeholder="{1}" min="1" max="{0}"/> of {0}
         <input type="submit" value="OK" name="page_option" />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    </form>
+    <form action="login_index.py" method="POST" style="float: left;">
         <input type="submit" value="Next page" name="page_option" {3}/>
     </form>
     '''.format(total_page_number, current_page, disable_prev, disable_next))
 
 def upload_image(username):
     print('''
+    <h3>Upload Image</h2>
     <form action="upload_image.py" method="POST" enctype="multipart/form-data" id="img_upload">
         <input type="hidden" name="username" value="{0}" />
         <input type="file" name="image" id="image" accept="image/jpeg,image/jpg,image/gif,image/png" required/>
@@ -111,6 +117,8 @@ def instagram_feed(username, loggedin, page_number):
         print('<p>')
         paging_html(total_page, page_number)
         print('</p>')
+        for i in range(5):
+            print("<br>")
         # print res
         # print('''all_instagram_feed fetch success''')
         # print('<br>')
