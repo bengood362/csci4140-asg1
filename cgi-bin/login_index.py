@@ -40,6 +40,15 @@ def auth_info(username, message=''):
     if message != '':
         print("<br>{0}<br>".format(message))
 
+def paging_html(total_page_number,current_page):
+    print('''
+    <form action="login_index.py" method="POST">
+        <input type="submit" value="Previous page" name="page_option"/>
+        Page <input style="width: 20px;" type="number" name="page" placeholder="{1}" min="1" max="{0}"/> of {0}
+        <input type="submit" value="Next page" name="page_option"/>
+    </form>
+    '''.format(total_page_number, current_page))
+
 def upload_image(username):
     print('''
     <form action="upload_image.py" method="POST" enctype="multipart/form-data" id="img_upload">
@@ -55,43 +64,32 @@ def upload_image(username):
     </form>
     '''.format(username))
 
-def all_instagram_feed(username, page_number):
-    success, res = db_util.read_logged_image(username, page_number, 8)
+def instagram_feed(username, loggedin, page_number):
+    if loggedin:
+        success, res, total_page = db_util.read_logged_image(username, page_number, 8)
+    else:
+        success, res, total_page = db_util.read_public_image(page_number, 8)
     if success:
-        for (path, timestamp) in res:
+        for i in range(len(res)):
+            (path, timestamp) = res[i]
             resized_path = utils.add_resized(path)
             resized_path = os.path.join('..',resized_path)
             path = os.path.join('..',path)
             print('''
-            <p><a href="{1}">
+            <a href="{1}">
                 <img src="{0}" alt="Something broke"/>
-            </a></p>
+            </a>
                 '''.format(resized_path, path))
+            if i == 3:
+                print("<br>")
+        print('<p>')
+        paging_html(total_page, page_number)
+        print('</p>')
         # print res
         # print('''all_instagram_feed fetch success''')
         # print('<br>')
     else:
         print('''all_instagram_feed fetch failed''')
-        print(str(res))
-        print('<br>')
-
-def public_instagram_feed(page_number):
-    success, res = db_util.read_public_image(page_number, 8)
-    if success:
-        for (path, timestamp) in res:
-            resized_path = utils.add_resized(path)
-            resized_path = os.path.join('..',resized_path)
-            path = os.path.join('..',path)
-            print('''
-            <p><a href="{1}">
-                <img src="{0}" alt="Something broke"/>
-            </a></p>
-                '''.format(resized_path, path))
-        # print res
-        # print('''public_instagram_feed fetch success''')
-        # print('<br>')
-    else:
-        print('''public instagram feed fetch failed''')
         print(str(res))
         print('<br>')
 
@@ -115,13 +113,13 @@ if __name__ == '__main__':
             print "<hr>"
             upload_image(username)
             print "<hr>"
-            all_instagram_feed(username,page_number)
+            instagram_feed(username,True,page_number)
         else:
             not_login_auth_info(message)
             print "<hr>"
             print "If you want to upload a photo, please login!"
             print "<hr>"
-            public_instagram_feed(page_number)
+            instagram_feed(username,False,page_number)
         htmlTail()
     except:
         cgi.print_exception()
