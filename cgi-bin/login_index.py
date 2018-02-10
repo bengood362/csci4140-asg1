@@ -102,18 +102,20 @@ def instagram_feed(username, loggedin, page_number):
             page_number = 1
             success, res, total_page = db_util.read_logged_image(username, page_number, 8)
     if success:
+        print "<p>"
         for i in range(len(res)):
             (path, timestamp) = res[i]
             resized_path = utils.add_resized(path)
             resized_path = os.path.join('..',resized_path)
             path = os.path.join('..',path)
             print('''
-            <a target="_blank" href="{1}">
-                <img src="{0}" alt="Something broke"/>
+            <a style="text-decoration: none;" target="_blank" href="{1}" style="padding-bottom: 10px">
+                <img style="padding-right: 10px;" src="{0}" alt="Something broke"/>
             </a>
                 '''.format(resized_path, path))
             if i == 3:
-                print("<br>")
+                print "</p><p>"
+        print "</p>"
         print('<p>')
         paging_html(total_page, page_number)
         print('</p>')
