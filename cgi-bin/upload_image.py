@@ -108,18 +108,13 @@ def save_image(image_from_form, username):
                 f.write(image_from_form.file.read())
             # identify if the image is valid
             # Identify output format: ['./upload/yr3sem2cusis_b7bc47388f6134a559a69a03.png', 'PNG', '1852x1092', '1852x1092+0+0', '8-bit', 'sRGB', '360167B', '0.000u', '0:00.000\n']
-            proc = subprocess.Popen(["identify", path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            proc = subprocess.Popen(["identify", file_extension+":"+path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = proc.communicate()
             if out:
-                image_iden = out.split(' ')
-                image_ext = image_iden[-8] #There might be some filename with space
-                image_size = image_iden[-7]
-                shown_ext = file_extension
-                if not ext_equal(shown_ext, image_ext):
-                    utils.unlink_file(path)
-                    utils.err("{0} {3}: image extension does not match: shown {2}, but actually {1}".format(username, image_ext, shown_ext, full_filename))
-                    return (False, "image extension does not match")
+                # if out, then is correctly identified
+                pass
             elif err:
+                utils.unlink_file(path)
                 return (False, "target is not a image")
                 utils.err(username+':'+err)
             return (True,path)
