@@ -115,7 +115,7 @@ def save_image(image_from_form, username):
                 pass
             elif err:
                 utils.unlink_file(path)
-                return (False, "target is not a image")
+                return (False, "target is not a image, or extension does not match")
                 utils.err(username+':'+err)
             return (True,path)
         else:
