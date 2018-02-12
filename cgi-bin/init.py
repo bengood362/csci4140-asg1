@@ -16,7 +16,7 @@ def htmlTop():
 def startInitHTML(message=''):
     print('''<h1>System initialization</h1>
         Important: All data will be deleted.<br>
-        <form action="cgi-bin/clean.py" method="get">
+        <form action="clean.py" method="get">
             <button type="submit" value="Please go ahead." />Please go ahead.</button>
         </form>
         <form action="../index.html" method="get">
