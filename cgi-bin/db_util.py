@@ -22,6 +22,9 @@ IMAGE_TABLE = "image_link"
 - curs | cursor
 
 csci4140.db
+@@@ admin @@@
+| username: TEXT
+| password: TEXT
 @@@ user @@@
 | username: TEXT
 | password: TEXT
@@ -44,6 +47,10 @@ class DatabaseInstance(object):
                 username TEXT PRIMARY KEY,
                 password TEXT,
                 cookie TEXT
+            )''')
+            curs.execute('''CREATE TABLE IF NOT EXISTS admin (
+                username TEXT PRIMARY KEY,
+                password TEXT
             )''')
             curs.execute('''CREATE TABLE IF NOT EXISTS image_link (
                 owner TEXT,
@@ -141,6 +148,44 @@ def read_logged_image(username, page_number, limit=8):
 
 ### User method
 # TESTED! check if user exists -> create
+def admin_exist():
+    try:
+        conn = DatabaseInstance.conn
+        curs = DatabaseInstance.curs
+        length = len(curs.execute("SELECT rowid FROM admin").fetchall())
+        if length == 0:
+            return False
+        else:
+            return True
+    except Exception as error:
+        err(error)
+        return True
+
+def create_admin(password):
+    try:
+        conn = DatabaseInstance.conn
+        curs = DatabaseInstance.curs
+        curs.execute("INSERT INTO admin VALUES('{0}','{1}');".format("Admin", password))
+        conn.commit()
+        done(username+":create admin success")
+        return (True, "change admin password success")
+    except Exception as error:
+        err(str(error))
+        return (False, str(error))
+
+def login_admin(password):
+    try:
+        conn = DatabaseInstance.conn
+        curs = DatabaseInstance.curs
+        rowid = curs.execute("SELECT rowid FROM admin WHERE username='{0}' and password='{1}'".format("Admin", password)).fetchall()
+        if rowid != 0:
+            return (True,"login success")
+        else:
+            return (False,"wrong password")
+    except Exception as error:
+        err(error)
+        return (False, str(err))
+
 def create_user(username, password):
     try:
         conn = DatabaseInstance.conn
