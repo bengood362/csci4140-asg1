@@ -9,7 +9,7 @@ def htmlTop():
         <html lang='en'>
              <head>
                  <meta charset='utf-8'/>
-                 <title>Login</title>
+                 <title>System initialization</title>
              </head>
          <body>""")
 
@@ -38,13 +38,13 @@ def adminFormHTML(message=''):
         print "<br>"+cgi.escape(message)
 
 def registerAdminAccountHTML(message=''):
-    print('''<h1>Login</h1>
+    print('''<h1>Change default admin password</h1>
     <form action="init.py" method="post" id="auth">
         Change admin default password because first enter this page<br>
         password: <input type="password" name="password" required><br><br>
         retype password: <input type="password" name="password_check" required><br><br>
     </form>
-    <button type="submit" form="auth" value="Login">Login</button>''')
+    <button type="submit" form="auth" value="Change">Change</button>''')
 
     if message != '':
         print "<br>"+cgi.escape(message)
