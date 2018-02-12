@@ -167,7 +167,7 @@ def create_admin(password):
         curs = DatabaseInstance.curs
         curs.execute("INSERT INTO admin VALUES('{0}','{1}');".format("Admin", password))
         conn.commit()
-        done(username+":create admin success")
+        done("create admin success")
         return (True, "change admin password success")
     except Exception as error:
         err(str(error))
